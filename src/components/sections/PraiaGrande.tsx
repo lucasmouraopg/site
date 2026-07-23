@@ -33,15 +33,16 @@ export default function PraiaGrande({ projetos }: PraiaGrandeProps) {
           {projetos.map((projeto, index) => (
             <motion.div
               key={projeto.slug}
+              className="h-full"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: index * 0.1 }}
             >
-              <Link href={`/projetos/${projeto.slug}`}>
-                <div className="group cursor-pointer bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300">
+              <Link href={`/projetos/${projeto.slug}`} className="block h-full">
+                <div className="h-full flex flex-col group cursor-pointer bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300">
                   {/* Image */}
-                  <div className="relative aspect-[4/3] overflow-hidden">
+                  <div className="relative aspect-[4/3] overflow-hidden shrink-0">
                     <div
                       className="w-full h-full bg-cover bg-center bg-no-repeat transform group-hover:scale-105 transition-transform duration-500"
                       style={{
@@ -59,7 +60,7 @@ export default function PraiaGrande({ projetos }: PraiaGrandeProps) {
                   </div>
 
                   {/* Content */}
-                  <div className="p-6">
+                  <div className="p-6 flex flex-col flex-grow">
                     <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
                       {projeto.titulo}
                     </h3>
@@ -67,8 +68,8 @@ export default function PraiaGrande({ projetos }: PraiaGrandeProps) {
                       {projeto.resumo}
                     </p>
 
-                    {/* CTA */}
-                    <div className="flex items-center text-blue-600 font-semibold text-sm">
+                    {/* CTA - Agora com mt-auto para empurrar pro final */}
+                    <div className="mt-auto flex items-center text-blue-600 font-semibold text-sm">
                       <span>Saiba mais</span>
                       <svg
                         className="w-4 h-4 ml-2 transform group-hover:translate-x-1 transition-transform"
