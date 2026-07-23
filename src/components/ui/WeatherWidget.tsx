@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { fetchWeather, getNextCityIndex, resetCityIndex } from '@/lib/weather';
 import type { WeatherData } from '@/lib/weather';
 
 function getBgClasses(main: string): string {
@@ -25,25 +24,24 @@ export default function WeatherWidget() {
   const [cityIndex, setCityIndex] = useState(0);
 
   const loadWeather = useCallback(async (idx: number) => {
-    const apiKey = process.env.NEXT_PUBLIC_OPENWEATHER_API_KEY;
-    if (!apiKey) return;
-
     try {
-      const data = await fetchWeather(apiKey, idx);
+      const res = await fetch(`/api/weather?city=${idx}`);
+      if (!res.ok) return;
+      const data: WeatherData = await res.json();
       setWeather(data);
     } catch {
-      console.error('Erro ao buscar clima');
+      // silently fail — widget shows placeholder
     }
   }, []);
 
   useEffect(() => {
-    resetCityIndex();
+    let idx = 0;
     loadWeather(0);
 
     const interval = setInterval(() => {
-      const next = getNextCityIndex();
-      setCityIndex(next);
-      loadWeather(next);
+      idx = (idx + 1) % 3;
+      setCityIndex(idx);
+      loadWeather(idx);
     }, 6000);
 
     return () => clearInterval(interval);

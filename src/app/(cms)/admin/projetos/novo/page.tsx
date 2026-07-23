@@ -42,7 +42,7 @@ export default function NovoProjetoPage() {
     if (!error) {
       router.push('/admin/projetos');
     } else {
-      alert('Erro ao criar projeto: ' + error.message);
+      alert('Erro ao criar projeto. Tente novamente.');
       setLoading(false);
     }
   };
