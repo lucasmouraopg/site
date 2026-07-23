@@ -98,13 +98,13 @@ export default function Hero() {
         </motion.div>
       </section>
 
-      {/* ========== MOBILE: CTAs + Headline (below hero, above biografia) ========== */}
-      <div className="md:hidden bg-gray-900 px-5 pt-6 pb-12">
+      {/* ========== MOBILE: CTAs (below hero, above biografia) ========== */}
+      <div className="md:hidden bg-gray-900 px-5 pt-6 pb-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="flex flex-col gap-4 mb-8"
+          className="flex flex-col gap-4"
         >
           <a
             href="https://www.canaldaBaixada.com.br"
@@ -125,24 +125,6 @@ export default function Hero() {
             </svg>
             Fale Conosco
           </a>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.5 }}
-          className="text-center"
-        >
-          <p className="text-white text-2xl font-extrabold tracking-tight leading-tight mb-4">
-            Raízes que moldam
-            <br />
-            um novo tempo
-          </p>
-          <img
-            src="/assets/images/logo-partido.png"
-            alt="Logo do partido"
-            className="h-10 mx-auto opacity-90"
-          />
         </motion.div>
       </div>
     </>
