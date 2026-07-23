@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import { supabase, Configuracao } from '@/lib/supabase';
+import { atualizarConfiguracao } from '../actions';
+
 
 export default function ConfiguracoesPage() {
   const [configs, setConfigs] = useState<Configuracao[]>([]);
@@ -24,10 +26,7 @@ export default function ConfiguracoesPage() {
 
   const handleUpdate = async (id: string, valor: string) => {
     setSaving(true);
-    await supabase
-      .from('configuracoes')
-      .update({ valor })
-      .eq('id', id);
+    await atualizarConfiguracao(id, valor);
     setSaving(false);
   };
 
@@ -48,6 +47,7 @@ export default function ConfiguracoesPage() {
                 <input
                   type="text"
                   defaultValue={config.valor || ''}
+                  maxLength={2000}
                   onBlur={(e) => handleUpdate(config.id, e.target.value)}
                   className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                 />

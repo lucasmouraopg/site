@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import { supabase, Projeto } from '@/lib/supabase';
+import { excluirProjeto, toggleStatusProjeto } from '../actions';
+
 
 export default function ProjetosAdminPage() {
   const [projetos, setProjetos] = useState<Projeto[]>([]);
@@ -23,13 +25,12 @@ export default function ProjetosAdminPage() {
 
   const handleDelete = async (id: string) => {
     if (!confirm('Tem certeza que deseja excluir este projeto?')) return;
-    await supabase.from('projetos').delete().eq('id', id);
+    await excluirProjeto(id);
     fetchProjetos();
   };
 
   const handleToggleStatus = async (id: string, currentStatus: string) => {
-    const newStatus = currentStatus === 'publicado' ? 'rascunho' : 'publicado';
-    await supabase.from('projetos').update({ status: newStatus }).eq('id', id);
+    await toggleStatusProjeto(id, currentStatus);
     fetchProjetos();
   };
 

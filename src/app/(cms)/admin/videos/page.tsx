@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import { supabase, Video } from '@/lib/supabase';
+import { excluirVideo } from '../actions';
+
 
 export default function VideosPage() {
   const [videos, setVideos] = useState<Video[]>([]);
@@ -23,7 +25,7 @@ export default function VideosPage() {
 
   const handleDelete = async (id: string) => {
     if (!confirm('Tem certeza que deseja excluir este vídeo?')) return;
-    await supabase.from('videos').delete().eq('id', id);
+    await excluirVideo(id);
     fetchVideos();
   };
 
@@ -33,10 +35,8 @@ export default function VideosPage() {
     <div>
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold text-gray-900">Vídeos</h1>
-        <a
-          href="/admin/videos/novo"
-          className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-        >
+        <a href="/admin/videos/novo"
+          className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
           Novo Vídeo
         </a>
       </div>
@@ -64,9 +64,7 @@ export default function VideosPage() {
                   <td className="px-6 py-4">
                     <span className={`px-2 inline-flex text-xs font-semibold rounded-full ${
                       video.status === 'publicado' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
-                    }`}>
-                      {video.status}
-                    </span>
+                    }`}>{video.status}</span>
                   </td>
                   <td className="px-6 py-4 text-right text-sm font-medium">
                     <button onClick={() => handleDelete(video.id)} className="text-red-600 hover:text-red-900">
