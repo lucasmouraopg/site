@@ -55,37 +55,47 @@ export default function Footer() {
       <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/95 to-gray-900/80" />
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
         {/* Main content: Social + Weather */}
-        <div className="py-12 border-b border-gray-800 text-center">
-          <h4 className="text-lg font-semibold mb-4">Redes Sociais</h4>
-          <div className="flex flex-wrap justify-center gap-3">
-            {socialLinks.map((link) => (
-              <a
-                key={link.platform}
-                href={link.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-blue-600 transition-colors duration-300"
-              >
-                {link.icon}
-              </a>
-            ))}
+        {/* Adicionados: md:flex-row md:justify-between md:items-center text-center md:text-left */}
+        <div className="py-12 border-b border-gray-800 flex flex-col md:flex-row items-center md:items-center justify-between text-center md:text-left gap-8">
+          
+          {/* Lado Esquerdo no Desktop: Redes + Botão */}
+          <div>
+            <h4 className="text-lg font-semibold mb-4">Redes Sociais</h4>
+            <div className="flex flex-wrap justify-center md:justify-start gap-3">
+              {socialLinks.map((link) => (
+                <a
+                  key={link.platform}
+                  href={link.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-blue-600 transition-colors duration-300"
+                >
+                  {link.icon}
+                </a>
+              ))}
+            </div>
+            <a
+              href="https://www.canaldaBaixada.com.br"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block mt-6 px-8 py-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-all duration-300 hover:scale-105 hover:shadow-lg uppercase tracking-wide"
+            >
+              Canal da Baixada
+            </a>
           </div>
-          <a
-            href="https://www.canaldaBaixada.com.br"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-block mt-6 px-8 py-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-all duration-300 hover:scale-105 hover:shadow-lg uppercase tracking-wide"
-          >
-            Canal da Baixada
-          </a>
-          <div className="mt-8">
+
+          {/* Lado Direito no Desktop: Clima ao Vivo */}
+          <div className="flex justify-center w-full md:w-auto">
             <WeatherWidget />
           </div>
+
         </div>
 
         {/* Bottom bar: Copyright + Legal */}
-        <div className="py-6 flex flex-col items-center gap-4 text-center">
+        {/* Adicionados: md:flex-row md:justify-between md:text-left */}
+        <div className="py-6 flex flex-col md:flex-row items-center md:justify-between gap-4 text-center md:text-left">
           <p className="text-gray-500 text-sm">
             © 2026 Lucas Mourão. Todos os direitos reservados.
           </p>
