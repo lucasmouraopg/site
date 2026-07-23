@@ -1,10 +1,20 @@
 'use client';
 
-import { useRef } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 
 export default function Hero() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 767px)');
+    setIsMobile(mq.matches);
+    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    mq.addEventListener('change', handler);
+    return () => mq.removeEventListener('change', handler);
+  }, []);
+
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ['start start', 'end start'],
@@ -12,6 +22,10 @@ export default function Hero() {
 
   const y = useTransform(scrollYProgress, [0, 1], ['0%', '30%']);
   const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
+
+  const bgImage = isMobile
+    ? '/assets/images/hero/hero-mobile.PNG'
+    : '/assets/images/hero/hero-desktop.jpg';
 
   return (
     <section
@@ -27,8 +41,8 @@ export default function Hero() {
         <div
           className="w-full h-full bg-cover bg-center bg-no-repeat"
           style={{
-            backgroundImage: 'url(/assets/images/hero/hero-desktop.jpg)',
-            backgroundPosition: 'center 30%',
+            backgroundImage: `url(${bgImage})`,
+            backgroundPosition: isMobile ? 'center top' : 'center 30%',
           }}
         />
       </motion.div>

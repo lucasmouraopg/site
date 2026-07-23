@@ -104,8 +104,8 @@ export default function Header() {
               ))}
             </nav>
 
-            {/* Social icons - Right */}
-            <div className="flex items-center gap-4">
+            {/* Social icons - Right (hidden on mobile, shown in mobile menu) */}
+            <div className="hidden lg:flex items-center gap-4">
               {socialLinks.map((link) => (
                 <a
                   key={link.platform}
@@ -158,6 +158,24 @@ export default function Header() {
                 {item.label}
               </button>
             ))}
+          </div>
+          {/* Social icons in mobile menu */}
+          <div className="px-4 pb-4 border-t border-gray-100 pt-3">
+            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Siga-nos</p>
+            <div className="flex items-center gap-4">
+              {socialLinks.map((link) => (
+                <a
+                  key={link.platform}
+                  href={link.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={link.platform}
+                  className="text-gray-500 hover:text-blue-600 transition-colors"
+                >
+                  {link.icon}
+                </a>
+              ))}
+            </div>
           </div>
         </div>
       )}
