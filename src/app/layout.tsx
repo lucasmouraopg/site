@@ -22,9 +22,8 @@ const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://lucasmourao.com.br'
 
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
-  title: 'Lucas Mourão - Deputado Estadual',
-  description:
-    'Site oficial de Lucas Mourão, pré-candidato a deputado estadual por Praia Grande. Conheça sua trajetória, projetos e visão para o estado de São Paulo.',
+  title: 'LUCAS MOURÃO - PRÉ CANDIDATO A DEPUTADO ESTADUAL',
+  description: 'RAIZES QUE MOLDAM UM NOVO TEMPO',
   keywords: [
     'Lucas Mourão',
     'Deputado Estadual',
@@ -39,9 +38,8 @@ export const metadata: Metadata = {
     locale: 'pt_BR',
     url: 'https://lucasmourao.com.br',
     siteName: 'Lucas Mourão',
-    title: 'Lucas Mourão - Deputado Estadual',
-    description:
-      'Site oficial de Lucas Mourão, pré-candidato a deputado estadual por Praia Grande.',
+    title: 'LUCAS MOURÃO - PRÉ CANDIDATO A DEPUTADO ESTADUAL',
+    description: 'RAIZES QUE MOLDAM UM NOVO TEMPO',
     images: [
       {
         url: '/assets/images/og/og-image.jpg',
@@ -53,9 +51,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Lucas Mourão - Deputado Estadual',
-    description:
-      'Site oficial de Lucas Mourão, pré-candidato a deputado estadual por Praia Grande.',
+    title: 'LUCAS MOURÃO - PRÉ CANDIDATO A DEPUTADO ESTADUAL',
+    description: 'RAIZES QUE MOLDAM UM NOVO TEMPO',
     images: ['/assets/images/og/og-image.jpg'],
   },
   icons: {
