@@ -1,0 +1,16 @@
+{
+  "name": "Lucas Mourão - Deputado Estadual",
+  "short_name": "Lucas Mourão",
+  "description": "Site oficial de Lucas Mourão, pré-candidato a deputado estadual por Praia Grande.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0F2440",
+  "theme_color": "#1E3A5F",
+  "icons": [
+    {
+      "src": "/assets/images/logo/favicon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

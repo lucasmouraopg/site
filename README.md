@@ -1,36 +1,135 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Lucas Mourão - Site Institucional
 
-## Getting Started
+## 🚀 Tecnologias Utilizadas
 
-First, run the development server:
+- **Frontend:** Next.js 14+ (App Router)
+- **Backend:** Supabase (PostgreSQL + Auth + Storage)
+- **Imagens:** Cloudinary (auto=format, auto=compress)
+- **Hosting:** Vercel
+- **Animações:** Framer Motion
+- **Scroll Suave:** Lenis
+- **Estilo:** Tailwind CSS v4
+- **API Clima:** OpenWeatherMap
+
+## 📦 Instalação
 
 ```bash
+# Instalar dependências
+npm install
+
+# Criar arquivo .env.local
+cp .env.example .env.local
+
+# Preencher variáveis de ambiente
+# NEXT_PUBLIC_SUPABASE_URL=
+# NEXT_PUBLIC_SUPABASE_ANON_KEY=
+# CLOUDINARY_CLOUD_NAME=
+# CLOUDINARY_API_KEY=
+# CLOUDINARY_API_SECRET=
+# OPENWEATHER_API_KEY=
+
+# Rodar em desenvolvimento
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+
+# Build para produção
+npm run build
+
+# Iniciar servidor de produção
+npm start
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🎨 Paleta de Cores
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **Primária:** `#1E3A5F` (Azul escuro)
+- **Secundária:** `#3B82F6` (Azul brilhante)
+- **Fundo:** `#0F2440` (Azul muito escuro)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 📁 Estrutura de Pastas
 
-## Learn More
+```
+lucas-mourao/
+├── src/
+│   ├── app/                    # Páginas Next.js
+│   ├── components/
+│   │   ├── layout/            # Header, Footer
+│   │   ├── sections/          # Hero, Biografia, Galeria, Videos
+│   │   └── ui/                # Componentes reutilizáveis
+│   ├── lib/                   # Utilitários (Supabase, Weather)
+│   └── types/                 # Tipos TypeScript
+├── public/                    # Arquivos estáticos
+├── assets/images/             # Imagens do projeto
+│   ├── hero/
+│   ├── bio/
+│   ├── galeria/
+│   └── ...
+└── DESIGN-SYSTEM.md           # Documentação de design
+```
 
-To learn more about Next.js, take a look at the following resources:
+## 🔧 CMS (Supabase)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Tabelas Principais
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. **configuracoes** - Configurações gerais do site
+2. **galeria_albuns** - Álbuns de fotos
+3. **galeria_fotos** - Fotos dos álbuns
+4. **videos** - Vídeos do YouTube
+5. **redes_sociais** - Links das redes sociais
 
-## Deploy on Vercel
+### Acesso ao CMS
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+O CMS será acessado via Supabase Studio:
+```
+https://<seu-projeto>.supabase.co/project/default/editor
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 📱 Responsividade
+
+- **Mobile:** < 768px
+- **Tablet:** 768px - 1024px
+- **Desktop:** > 1024px
+
+## 🔍 SEO
+
+- Meta tags por página
+- Open Graph para compartilhamento
+- Schema.org (Person, WebSite)
+- Sitemap.xml
+- Robots.txt
+
+## 🚀 Deploy
+
+### Vercel
+
+1. Conectar repositório ao Vercel
+2. Configurar variáveis de ambiente
+3. Adicionar domínio personalizado
+4. Ativar HTTPS
+
+### Domínio
+
+- **Produção:** lucasmourao.com.br
+- **Preview:** lucas-mourao.vercel.app
+
+## 📊 Analytics
+
+- Google Analytics 4
+- Eventos de conversão configurados
+
+## 🎯 Próximos Passos
+
+1. [ ] Configurar Supabase e criar tabelas
+2. [ ] Configurar Cloudinary
+3. [ ] Adicionar API key do OpenWeatherMap
+4. [ ] Subir fotos para o Cloudinary
+5. [ ] Configurar CMS no Supabase
+6. [ ] Testar formulário de contato
+7. [ ] Configurar domínio no Vercel
+8. [ ] Testar em todos os dispositivos
+
+## 🐛 Problemas Conhecidos
+
+- Nenhum no momento
+
+## 📄 Licença
+
+© 2024 Lucas Mourão. Todos os direitos reservados.
