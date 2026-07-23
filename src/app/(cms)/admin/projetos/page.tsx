@@ -29,8 +29,8 @@ export default function ProjetosAdminPage() {
     fetchProjetos();
   };
 
-  const handleToggleStatus = async (id: string, currentStatus: string) => {
-    await toggleStatusProjeto(id, currentStatus);
+  const handleToggleStatus = async (id: string) => {
+    await toggleStatusProjeto(id);
     fetchProjetos();
   };
 
@@ -70,7 +70,7 @@ export default function ProjetosAdminPage() {
                   <td className="px-6 py-4 text-sm text-gray-500">{projeto.categoria}</td>
                   <td className="px-6 py-4">
                     <button
-                      onClick={() => handleToggleStatus(projeto.id, projeto.status)}
+                      onClick={() => handleToggleStatus(projeto.id)}
                       className={`px-2 inline-flex text-xs font-semibold rounded-full cursor-pointer ${
                         projeto.status === 'publicado' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
                       }`}

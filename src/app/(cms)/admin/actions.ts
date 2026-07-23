@@ -1,5 +1,6 @@
 'use server';
 
+import { createClient } from '@supabase/supabase-js';
 import { createAdminClient } from '@/lib/supabase-admin';
 import { revalidatePath } from 'next/cache';
 
@@ -8,6 +9,20 @@ function getAdmin() {
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
   if (!url || !key) throw new Error('Admin credentials not configured');
   return createAdminClient();
+}
+
+async function requireAuth() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (!url || !anonKey) throw new Error('Supabase not configured');
+
+  const supabase = createClient(url, anonKey);
+
+  const { data: { user }, error } = await supabase.auth.getUser();
+  if (error || !user) {
+    throw new Error('Não autenticado');
+  }
+  return user;
 }
 
 function sanitize(value: string): string {
@@ -33,6 +48,10 @@ function validateYouTubeUrl(url: string): boolean {
   }
 }
 
+function isValidUUID(str: string): boolean {
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(str);
+}
+
 // ============================================
 // Projetos
 // ============================================
@@ -46,6 +65,7 @@ export async function criarProjeto(formData: {
   share_text: string;
   status: string;
 }) {
+  await requireAuth();
   const supabase = getAdmin();
 
   const titulo = sanitize(formData.titulo);
@@ -80,6 +100,9 @@ export async function criarProjeto(formData: {
 }
 
 export async function excluirProjeto(id: string) {
+  await requireAuth();
+  if (!isValidUUID(id)) return { error: 'ID inválido.' };
+
   const supabase = getAdmin();
   const { error } = await supabase.from('projetos').delete().eq('id', id);
   if (error) return { error: 'Erro ao excluir projeto.' };
@@ -88,9 +111,21 @@ export async function excluirProjeto(id: string) {
   return { success: true };
 }
 
-export async function toggleStatusProjeto(id: string, currentStatus: string) {
+export async function toggleStatusProjeto(id: string) {
+  await requireAuth();
+  if (!isValidUUID(id)) return { error: 'ID inválido.' };
+
   const supabase = getAdmin();
-  const newStatus = currentStatus === 'publicado' ? 'rascunho' : 'publicado';
+
+  const { data: projeto, error: fetchError } = await supabase
+    .from('projetos')
+    .select('status')
+    .eq('id', id)
+    .single();
+
+  if (fetchError || !projeto) return { error: 'Projeto não encontrado.' };
+
+  const newStatus = projeto.status === 'publicado' ? 'rascunho' : 'publicado';
   const { error } = await supabase.from('projetos').update({ status: newStatus }).eq('id', id);
   if (error) return { error: 'Erro ao atualizar status.' };
   revalidatePath('/admin/projetos');
@@ -108,6 +143,7 @@ export async function criarAlbum(formData: {
   categoria: string;
   status: string;
 }) {
+  await requireAuth();
   const supabase = getAdmin();
 
   const titulo = sanitize(formData.titulo);
@@ -132,6 +168,9 @@ export async function criarAlbum(formData: {
 }
 
 export async function excluirAlbum(id: string) {
+  await requireAuth();
+  if (!isValidUUID(id)) return { error: 'ID inválido.' };
+
   const supabase = getAdmin();
   const { error } = await supabase.from('galeria_albuns').delete().eq('id', id);
   if (error) return { error: 'Erro ao excluir álbum.' };
@@ -150,6 +189,7 @@ export async function criarVideo(formData: {
   categoria: string;
   status: string;
 }) {
+  await requireAuth();
   const supabase = getAdmin();
 
   const titulo = sanitize(formData.titulo);
@@ -176,6 +216,9 @@ export async function criarVideo(formData: {
 }
 
 export async function excluirVideo(id: string) {
+  await requireAuth();
+  if (!isValidUUID(id)) return { error: 'ID inválido.' };
+
   const supabase = getAdmin();
   const { error } = await supabase.from('videos').delete().eq('id', id);
   if (error) return { error: 'Erro ao excluir vídeo.' };
@@ -188,6 +231,9 @@ export async function excluirVideo(id: string) {
 // ============================================
 
 export async function atualizarConfiguracao(id: string, valor: string) {
+  await requireAuth();
+  if (!isValidUUID(id)) return { error: 'ID inválido.' };
+
   const supabase = getAdmin();
   const sanitized = sanitize(valor);
   const { error } = await supabase.from('configuracoes').update({ valor: sanitized }).eq('id', id);

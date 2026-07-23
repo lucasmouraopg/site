@@ -74,7 +74,8 @@ export async function getGaleriaAlbuns() {
     .from('galeria_albuns')
     .select('*')
     .eq('status', 'publicado')
-    .order('criado_em', { ascending: false });
+    .order('criado_em', { ascending: false })
+    .limit(100);
 
   if (error) throw error;
   return data as GaleriaAlbum[];
@@ -85,7 +86,8 @@ export async function getGaleriaFotos(albumId: string) {
     .from('galeria_fotos')
     .select('*')
     .eq('album_id', albumId)
-    .order('ordem', { ascending: true });
+    .order('ordem', { ascending: true })
+    .limit(500);
 
   if (error) throw error;
   return data as GaleriaFoto[];
@@ -96,7 +98,8 @@ export async function getVideos() {
     .from('videos')
     .select('*')
     .eq('status', 'publicado')
-    .order('ordem', { ascending: true });
+    .order('ordem', { ascending: true })
+    .limit(100);
 
   if (error) throw error;
   return data as Video[];
@@ -107,7 +110,8 @@ export async function getRedesSociais() {
     .from('redes_sociais')
     .select('*')
     .eq('ativo', true)
-    .order('ordem', { ascending: true });
+    .order('ordem', { ascending: true })
+    .limit(20);
 
   if (error) throw error;
   return data as RedeSocial[];
@@ -128,7 +132,8 @@ export async function getConfiguracoes(chaves: string[]) {
   const { data, error } = await supabase
     .from('configuracoes')
     .select('chave, valor')
-    .in('chave', chaves);
+    .in('chave', chaves)
+    .limit(50);
 
   if (error) throw error;
   return data.reduce((acc, item) => {
@@ -143,7 +148,8 @@ export async function getProjetos(): Promise<Projeto[]> {
       .from('projetos')
       .select('*')
       .eq('status', 'publicado')
-      .order('ordem', { ascending: true });
+      .order('ordem', { ascending: true })
+      .limit(100);
 
     if (error) throw error;
     if (data && data.length > 0) return data as Projeto[];
@@ -202,7 +208,8 @@ export async function getAllProjetoSlugs(): Promise<string[]> {
     const { data, error } = await supabase
       .from('projetos')
       .select('slug')
-      .eq('status', 'publicado');
+      .eq('status', 'publicado')
+      .limit(100);
 
     if (error) throw error;
     if (data && data.length > 0) return data.map((p) => p.slug);
