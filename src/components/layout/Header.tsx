@@ -99,44 +99,69 @@ export default function Header() {
         >
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between h-12">
-              {/* Desktop nav - left */}
-              <nav className="hidden lg:flex items-center gap-1">
-                {menuItems.map((item) => (
-                  <button
-                    key={item.href}
-                    onClick={() => scrollToSection(item.href)}
-                    className={`px-3 py-1 text-xs font-bold uppercase tracking-wider transition-colors duration-200 rounded ${
-                      isScrolled
-                        ? 'text-gray-600 hover:text-blue-600'
-                        : 'text-white/80 hover:text-white'
-                    }`}
-                  >
-                    {item.label}
-                  </button>
-                ))}
-              </nav>
+              {/* Left side: Social icons (mobile) / Nav links (desktop) */}
+              <div className="flex items-center gap-3">
+                {/* Social icons - visible on mobile */}
+                <div className="flex items-center gap-3 lg:hidden">
+                  {socialLinks.map((link) => (
+                    <a
+                      key={link.platform}
+                      href={link.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={link.platform}
+                      className={`transition-colors duration-200 ${
+                        isScrolled
+                          ? 'text-gray-500 hover:text-blue-600'
+                          : 'text-white/70 hover:text-white'
+                      }`}
+                    >
+                      {link.icon}
+                    </a>
+                  ))}
+                </div>
 
-              {/* Right side: social icons + hamburger */}
-              <div className="flex items-center gap-3 ml-auto">
-                {/* Social icons - always visible */}
-                {socialLinks.map((link) => (
-                  <a
-                    key={link.platform}
-                    href={link.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={link.platform}
-                    className={`transition-colors duration-200 ${
-                      isScrolled
-                        ? 'text-gray-500 hover:text-blue-600'
-                        : 'text-white/70 hover:text-white'
-                    }`}
-                  >
-                    {link.icon}
-                  </a>
-                ))}
+                {/* Desktop nav - visible on desktop */}
+                <nav className="hidden lg:flex items-center gap-1">
+                  {menuItems.map((item) => (
+                    <button
+                      key={item.href}
+                      onClick={() => scrollToSection(item.href)}
+                      className={`px-3 py-1 text-xs font-bold uppercase tracking-wider transition-colors duration-200 rounded ${
+                        isScrolled
+                          ? 'text-gray-600 hover:text-blue-600'
+                          : 'text-white/80 hover:text-white'
+                      }`}
+                    >
+                      {item.label}
+                    </button>
+                  ))}
+                </nav>
+              </div>
 
-                {/* Hamburger button - mobile only */}
+              {/* Right side: Social icons (desktop) / Hamburger (mobile) */}
+              <div className="flex items-center gap-3">
+                {/* Social icons - visible on desktop */}
+                <div className="hidden lg:flex items-center gap-3">
+                  {socialLinks.map((link) => (
+                    <a
+                      key={link.platform}
+                      href={link.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={link.platform}
+                      className={`transition-colors duration-200 ${
+                        isScrolled
+                          ? 'text-gray-500 hover:text-blue-600'
+                          : 'text-white/70 hover:text-white'
+                      }`}
+                    >
+                      {link.icon}
+                    </a>
+                  ))}
+                </div>
+
+                {/* Hamburger button - visible on mobile */}
                 <button
                   onClick={() => setIsDrawerOpen(true)}
                   className={`lg:hidden p-2 rounded-lg transition-colors ${
