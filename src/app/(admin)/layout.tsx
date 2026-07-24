@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 
@@ -11,8 +11,13 @@ export default function AdminRootLayout({
   children: React.ReactNode;
 }) {
   const router = useRouter();
+  const pathname = usePathname();
   const [loading, setLoading] = useState(true);
   const [authenticated, setAuthenticated] = useState(false);
+
+  if (pathname === '/admin/login') {
+    return <div className="min-h-screen bg-gray-50">{children}</div>;
+  }
 
   useEffect(() => {
     const checkAuth = async () => {
