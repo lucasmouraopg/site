@@ -24,7 +24,6 @@ export default function LoginPage() {
 
       if (error) throw error;
 
-      router.refresh();
       router.push('/admin');
     } catch (err: any) {
       console.error('Erro de login:', err.message);
