@@ -98,10 +98,9 @@ export default function Header() {
           }`}
         >
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-between h-12">
-              {/* Left side: Social icons (mobile) / Nav links (desktop) */}
+            <div className="w-full flex justify-between items-center h-12">
+              {/* LEFT: Social icons (mobile) / Nav links (desktop) */}
               <div className="flex items-center gap-3">
-                {/* Social icons - visible on mobile */}
                 <div className="flex items-center gap-3 lg:hidden">
                   {socialLinks.map((link) => (
                     <a
@@ -121,7 +120,6 @@ export default function Header() {
                   ))}
                 </div>
 
-                {/* Desktop nav - visible on desktop */}
                 <nav className="hidden lg:flex items-center gap-1">
                   {menuItems.map((item) => (
                     <button
@@ -139,9 +137,22 @@ export default function Header() {
                 </nav>
               </div>
 
-              {/* Right side: Social icons (desktop) / Hamburger (mobile) */}
+              {/* RIGHT: Hamburger (mobile) / Social icons (desktop) */}
               <div className="flex items-center gap-3">
-                {/* Social icons - visible on desktop */}
+                <button
+                  onClick={() => setIsDrawerOpen(true)}
+                  className={`lg:hidden p-2 rounded-lg transition-colors ${
+                    isScrolled
+                      ? 'text-gray-700 hover:bg-gray-100'
+                      : 'text-white hover:bg-white/10'
+                  }`}
+                  aria-label="Abrir menu"
+                >
+                  <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M4 6h16M4 12h16M4 18h16" />
+                  </svg>
+                </button>
+
                 <div className="hidden lg:flex items-center gap-3">
                   {socialLinks.map((link) => (
                     <a
@@ -160,21 +171,6 @@ export default function Header() {
                     </a>
                   ))}
                 </div>
-
-                {/* Hamburger button - visible on mobile */}
-                <button
-                  onClick={() => setIsDrawerOpen(true)}
-                  className={`lg:hidden p-2 rounded-lg transition-colors ${
-                    isScrolled
-                      ? 'text-gray-700 hover:bg-gray-100'
-                      : 'text-white hover:bg-white/10'
-                  }`}
-                  aria-label="Abrir menu"
-                >
-                  <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M4 6h16M4 12h16M4 18h16" />
-                  </svg>
-                </button>
               </div>
             </div>
           </div>
