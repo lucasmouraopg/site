@@ -24,7 +24,7 @@ export default function LoginPage() {
 
       if (error) throw error;
 
-      router.push('/admin');
+      window.location.href = '/admin';
     } catch (err: any) {
       console.error('Erro de login:', err.message);
       setError('E-mail ou senha inválidos, ou erro de conexão.');
