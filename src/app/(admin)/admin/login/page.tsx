@@ -16,16 +16,21 @@ export default function LoginPage() {
     setLoading(true);
     setError('');
 
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+    try {
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
 
-    if (error) {
-      setError('Email ou senha inválidos');
-      setLoading(false);
-    } else {
+      if (error) throw error;
+
+      router.refresh();
       router.push('/admin');
+    } catch (err: any) {
+      console.error('Erro de login:', err.message);
+      setError('E-mail ou senha inválidos, ou erro de conexão.');
+    } finally {
+      setLoading(false);
     }
   };
 
