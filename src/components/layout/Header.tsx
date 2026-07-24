@@ -117,7 +117,7 @@ export default function Header() {
               </nav>
 
               {/* Right side: social icons + hamburger */}
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3 ml-auto">
                 {/* Social icons - always visible */}
                 {socialLinks.map((link) => (
                   <a
