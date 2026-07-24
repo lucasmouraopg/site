@@ -4,6 +4,8 @@ import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { WeatherData } from '@/lib/weather';
 
+const DEFAULT_CITY_COUNT = 7;
+
 function getBgClasses(main: string): string {
   const map: Record<string, string> = {
     Clear: 'from-amber-500/10 via-blue-500/5 to-transparent',
@@ -20,34 +22,51 @@ function getBgClasses(main: string): string {
 }
 
 export default function WeatherWidget() {
-  const [weather, setWeather] = useState<WeatherData | null>(null);
+  const [weatherList, setWeatherList] = useState<WeatherData[]>([]);
   const [cityIndex, setCityIndex] = useState(0);
 
-  const loadWeather = useCallback(async (idx: number) => {
+  const loadWeather = useCallback(async () => {
     try {
-      const res = await fetch(`/api/weather?city=${idx}`);
+      let visitorCity: string | null = null;
+
+      try {
+        const geoRes = await fetch('/api/geolocation');
+        if (geoRes.ok) {
+          const geoData = await geoRes.json();
+          visitorCity = geoData.city;
+        }
+      } catch {
+        // geolocation failed silently
+      }
+
+      const params = new URLSearchParams();
+      if (visitorCity) {
+        params.set('visitorCity', visitorCity);
+      }
+
+      const res = await fetch(`/api/weather?${params.toString()}`);
       if (!res.ok) return;
-      const data: WeatherData = await res.json();
-      setWeather(data);
+      const data: WeatherData[] = await res.json();
+      setWeatherList(data);
     } catch {
       // silently fail — widget shows placeholder
     }
   }, []);
 
   useEffect(() => {
-    let idx = 0;
-    loadWeather(0);
+    loadWeather();
 
     const interval = setInterval(() => {
-      idx = (idx + 1) % 3;
-      setCityIndex(idx);
-      loadWeather(idx);
+      setCityIndex((prev) => {
+        if (weatherList.length === 0) return 0;
+        return (prev + 1) % weatherList.length;
+      });
     }, 6000);
 
     return () => clearInterval(interval);
-  }, [loadWeather]);
+  }, [loadWeather, weatherList.length]);
 
-  if (!weather) {
+  if (weatherList.length === 0) {
     return (
       <div className="backdrop-blur-md bg-white/5 border border-white/10 rounded-2xl px-6 py-5 w-full max-w-[340px] shadow-lg shadow-black/10">
         <div className="flex items-center gap-3 mb-4">
@@ -66,7 +85,11 @@ export default function WeatherWidget() {
     );
   }
 
+  const weather = weatherList[cityIndex];
+  if (!weather) return null;
+
   const bg = getBgClasses(weather.weatherMain);
+  const totalDots = weatherList.length;
 
   return (
     <div
@@ -150,7 +173,7 @@ export default function WeatherWidget() {
 
           {/* Dots indicator */}
           <div className="flex justify-center gap-1.5 mt-4 pt-3 border-t border-white/10">
-            {[0, 1, 2].map((i) => (
+            {Array.from({ length: Math.min(totalDots, 8) }).map((_, i) => (
               <div
                 key={i}
                 className={`h-1.5 rounded-full transition-all duration-300 ${

@@ -241,3 +241,97 @@ export async function atualizarConfiguracao(id: string, valor: string) {
   revalidatePath('/admin/configuracoes');
   return { success: true };
 }
+
+// ============================================
+// Leads (Captação)
+// ============================================
+
+export async function criarLead(formData: {
+  nome: string;
+  whatsapp: string;
+  email: string;
+  bairro: string;
+  cidade: string;
+}) {
+  const nome = sanitize(formData.nome);
+  const whatsapp = sanitize(formData.whatsapp);
+  const email = sanitize(formData.email);
+  const bairro = sanitize(formData.bairro);
+  const cidade = sanitize(formData.cidade);
+
+  if (!nome || !whatsapp) {
+    return { error: 'Nome e WhatsApp são obrigatórios.' };
+  }
+
+  const supabase = getAdmin();
+  const { error } = await supabase.from('leads').insert({
+    nome,
+    whatsapp,
+    email: email || null,
+    bairro: bairro || null,
+    cidade: cidade || null,
+  });
+
+  if (error) return { error: 'Erro ao salvar lead.' };
+  return { success: true };
+}
+
+export async function excluirLead(id: string) {
+  await requireAuth();
+  if (!isValidUUID(id)) return { error: 'ID inválido.' };
+
+  const supabase = getAdmin();
+  const { error } = await supabase.from('leads').delete().eq('id', id);
+  if (error) return { error: 'Erro ao excluir lead.' };
+  revalidatePath('/admin/leads');
+  return { success: true };
+}
+
+// ============================================
+// Agenda (Eventos)
+// ============================================
+
+export async function criarCompromisso(formData: {
+  titulo: string;
+  descricao: string;
+  data_hora: string;
+  local: string;
+  status: string;
+}) {
+  await requireAuth();
+  const supabase = getAdmin();
+
+  const titulo = sanitize(formData.titulo);
+  const descricao = sanitize(formData.descricao);
+  const local = sanitize(formData.local);
+  const status = formData.status === 'publicado' ? 'publicado' : 'rascunho';
+
+  if (!titulo || !formData.data_hora) {
+    return { error: 'Título e data/hora são obrigatórios.' };
+  }
+
+  const { error } = await supabase.from('agenda').insert({
+    titulo,
+    descricao: descricao || null,
+    data_hora: formData.data_hora,
+    local: local || null,
+    status,
+  });
+
+  if (error) return { error: 'Erro ao salvar compromisso.' };
+  revalidatePath('/admin/agenda');
+  revalidatePath('/');
+  return { success: true };
+}
+
+export async function excluirCompromisso(id: string) {
+  await requireAuth();
+  if (!isValidUUID(id)) return { error: 'ID inválido.' };
+
+  const supabase = getAdmin();
+  const { error } = await supabase.from('agenda').delete().eq('id', id);
+  if (error) return { error: 'Erro ao excluir compromisso.' };
+  revalidatePath('/admin/agenda');
+  revalidatePath('/');
+  return { success: true };
+}

@@ -9,10 +9,12 @@ interface Stats {
   albuns: number;
   fotos: number;
   videos: number;
+  leads: number;
+  agenda: number;
 }
 
 export default function AdminDashboard() {
-  const [stats, setStats] = useState<Stats>({ projetos: 0, albuns: 0, fotos: 0, videos: 0 });
+  const [stats, setStats] = useState<Stats>({ projetos: 0, albuns: 0, fotos: 0, videos: 0, leads: 0, agenda: 0 });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -33,11 +35,21 @@ export default function AdminDashboard() {
         .from('videos')
         .select('*', { count: 'exact', head: true });
 
+      const { count: leads } = await supabase
+        .from('leads')
+        .select('*', { count: 'exact', head: true });
+
+      const { count: agenda } = await supabase
+        .from('agenda')
+        .select('*', { count: 'exact', head: true });
+
       setStats({
         projetos: projetos || 0,
         albuns: albuns || 0,
         fotos: fotos || 0,
         videos: videos || 0,
+        leads: leads || 0,
+        agenda: agenda || 0,
       });
       setLoading(false);
     };
@@ -82,6 +94,22 @@ export default function AdminDashboard() {
           <h3 className="text-lg font-medium text-gray-900">Vídeos</h3>
           <p className="mt-2 text-3xl font-bold text-blue-600">{stats.videos}</p>
           <Link href="/admin/videos" className="mt-4 inline-block text-sm text-blue-600 hover:underline">
+            Gerenciar →
+          </Link>
+        </div>
+
+        <div className="bg-white rounded-lg shadow p-6">
+          <h3 className="text-lg font-medium text-gray-900">Leads</h3>
+          <p className="mt-2 text-3xl font-bold text-blue-600">{stats.leads}</p>
+          <Link href="/admin/leads" className="mt-4 inline-block text-sm text-blue-600 hover:underline">
+            Gerenciar →
+          </Link>
+        </div>
+
+        <div className="bg-white rounded-lg shadow p-6">
+          <h3 className="text-lg font-medium text-gray-900">Agenda</h3>
+          <p className="mt-2 text-3xl font-bold text-blue-600">{stats.agenda}</p>
+          <Link href="/admin/agenda" className="mt-4 inline-block text-sm text-blue-600 hover:underline">
             Gerenciar →
           </Link>
         </div>

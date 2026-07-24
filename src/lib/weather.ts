@@ -1,5 +1,3 @@
-// Weather API utility using OpenWeatherMap
-
 export interface WeatherData {
   city: string;
   temp: number;
@@ -13,66 +11,23 @@ export interface WeatherData {
   weatherMain: string;
 }
 
-interface CityConfig {
+export interface CityConfig {
   name: string;
   lat: number;
   lon: number;
 }
 
-const cities: CityConfig[] = [
+export const ALL_CITIES: CityConfig[] = [
   { name: 'Praia Grande', lat: -24.0084, lon: -46.4122 },
   { name: 'Santos', lat: -23.9608, lon: -46.3339 },
   { name: 'São Vicente', lat: -23.9631, lon: -46.3922 },
+  { name: 'Cubatão', lat: -23.8953, lon: -46.4233 },
+  { name: 'Guarujá', lat: -23.9811, lon: -46.2578 },
+  { name: 'Vale do Ribeira', lat: -24.4833, lon: -47.9917 },
+  { name: 'São Paulo', lat: -23.5505, lon: -46.6333 },
 ];
 
-let currentCityIndex = 0;
-
-export async function fetchWeather(
-  apiKey: string,
-  cityIndex: number = 0
-): Promise<WeatherData> {
-  const city = cities[cityIndex];
-
-  try {
-    const response = await fetch(
-      `https://api.openweathermap.org/data/2.5/weather?lat=${city.lat}&lon=${city.lon}&appid=${apiKey}&units=metric&lang=pt_br`
-    );
-
-    if (!response.ok) {
-      throw new Error('Weather API error');
-    }
-
-    const data = await response.json();
-
-    return {
-      city: city.name,
-      temp: Math.round(data.main.temp),
-      feelsLike: Math.round(data.main.feels_like),
-      humidity: data.main.humidity,
-      windSpeed: Math.round(data.wind.speed * 3.6),
-      tempMin: Math.round(data.main.temp_min),
-      tempMax: Math.round(data.main.temp_max),
-      description: data.weather[0].description,
-      icon: getWeatherIcon(data.weather[0].main),
-      weatherMain: data.weather[0].main,
-    };
-  } catch {
-    return {
-      city: city.name,
-      temp: 0,
-      feelsLike: 0,
-      humidity: 0,
-      windSpeed: 0,
-      tempMin: 0,
-      tempMax: 0,
-      description: 'Indisponível',
-      icon: '🌤',
-      weatherMain: 'Clear',
-    };
-  }
-}
-
-function getWeatherIcon(weatherMain: string): string {
+export function getWeatherIcon(weatherMain: string): string {
   const icons: Record<string, string> = {
     Clear: '☀️',
     Clouds: '⛅',
@@ -92,13 +47,4 @@ function getWeatherIcon(weatherMain: string): string {
   };
 
   return icons[weatherMain] || '🌤';
-}
-
-export function getNextCityIndex(): number {
-  currentCityIndex = (currentCityIndex + 1) % cities.length;
-  return currentCityIndex;
-}
-
-export function resetCityIndex(): void {
-  currentCityIndex = 0;
 }
