@@ -87,7 +87,7 @@ export default function RootLayout({
         <link rel="manifest" href="/manifest.json" />
       </head>
       <body
-        className={`${inter.variable} ${montserrat.variable} font-sans antialiased`}
+        className={`${inter.variable} ${montserrat.variable} font-sans antialiased overflow-x-hidden`}
       >
         <LoadingScreen />
         <ScrollProgress />

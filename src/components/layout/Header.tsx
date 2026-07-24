@@ -62,7 +62,8 @@ export default function Header() {
   }, []);
 
   const scrollToSection = (href: string) => {
-    const element = document.querySelector(href);
+    const selector = href.replace(/^\//, '');
+    const element = document.querySelector(selector);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
     }

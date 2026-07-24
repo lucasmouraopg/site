@@ -70,7 +70,7 @@ function ensureScriptLoaded(): Promise<void> {
 
     const script = document.createElement('script');
     script.id = 'instagram-embed-script';
-    script.src = 'https://platform.instagram.com/en_US/embeds.js';
+    script.src = 'https://www.instagram.com/embed.js';
     script.async = true;
     script.onload = () => {
       processEmbeds();
@@ -134,7 +134,7 @@ export default function RedesSociais() {
         </motion.div>
 
         {/* 2. Reels */}
-        <div ref={reelsContainerRef}>
+        <div ref={reelsContainerRef} className="w-full max-w-full overflow-hidden">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -150,16 +150,16 @@ export default function RedesSociais() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: index * 0.1 }}
-                  className="flex justify-center min-h-[400px]"
+                  className="flex justify-center w-full max-w-full overflow-hidden"
                 >
                   <blockquote
-                    className="instagram-media"
+                    className="instagram-media w-full max-w-full overflow-hidden"
                     data-instgrm-permalink={url}
                     data-instgrm-version="14"
                     style={{
                       maxWidth: '320px',
                       width: '100%',
-                      minWidth: '200px',
+                      minWidth: 0,
                     }}
                   />
                 </motion.div>
