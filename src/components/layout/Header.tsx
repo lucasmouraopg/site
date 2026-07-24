@@ -50,136 +50,172 @@ const socialLinks = [
 
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
     };
-
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const scrollToSection = (href: string) => {
-    const selector = href.replace(/^\//, '');
-    const element = document.querySelector(selector);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+  useEffect(() => {
+    if (isDrawerOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
     }
-    setIsMobileMenuOpen(false);
+    return () => { document.body.style.overflow = ''; };
+  }, [isDrawerOpen]);
+
+  const scrollToSection = (href: string) => {
+    setIsDrawerOpen(false);
+    const selector = href.replace(/^\//, '');
+    setTimeout(() => {
+      const element = document.querySelector(selector);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 300);
   };
 
   return (
-    <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled
-          ? 'bg-white/95 backdrop-blur-md shadow-lg'
-          : 'bg-transparent'
-      }`}
-    >
-      {/* Single top bar: nav + social, right-aligned */}
-      <div
-        className={`border-b transition-all duration-300 ${
+    <>
+      <header
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           isScrolled
-            ? 'bg-white/95 border-gray-200'
-            : 'bg-gray-950/60 backdrop-blur-sm border-transparent'
+            ? 'bg-white/95 backdrop-blur-md shadow-lg'
+            : 'bg-transparent'
         }`}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-10">
-            {/* Nav links - Left */}
-            <nav className="hidden lg:flex items-center gap-1">
-              {menuItems.map((item) => (
-                <button
-                  key={item.href}
-                  onClick={() => scrollToSection(item.href)}
-                  className={`px-3 py-1 text-xs font-bold uppercase tracking-wider transition-colors duration-200 rounded ${
-                    isScrolled
-                      ? 'text-gray-600 hover:text-blue-600'
-                      : 'text-white/80 hover:text-white'
-                  }`}
-                >
-                  {item.label}
-                </button>
-              ))}
-            </nav>
+        {/* Main bar */}
+        <div
+          className={`border-b transition-all duration-300 ${
+            isScrolled
+              ? 'bg-white/95 border-gray-200'
+              : 'bg-gray-950/60 backdrop-blur-sm border-transparent'
+          }`}
+        >
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center justify-between h-12">
+              {/* Desktop nav - left */}
+              <nav className="hidden lg:flex items-center gap-1">
+                {menuItems.map((item) => (
+                  <button
+                    key={item.href}
+                    onClick={() => scrollToSection(item.href)}
+                    className={`px-3 py-1 text-xs font-bold uppercase tracking-wider transition-colors duration-200 rounded ${
+                      isScrolled
+                        ? 'text-gray-600 hover:text-blue-600'
+                        : 'text-white/80 hover:text-white'
+                    }`}
+                  >
+                    {item.label}
+                  </button>
+                ))}
+              </nav>
 
-            {/* Social icons - Right (hidden on mobile, shown in mobile menu) */}
-            <div className="hidden lg:flex items-center gap-4">
-              {socialLinks.map((link) => (
-                <a
-                  key={link.platform}
-                  href={link.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={link.platform}
-                  className={`transition-colors duration-200 ${
+              {/* Right side: social icons + hamburger */}
+              <div className="flex items-center gap-3">
+                {/* Social icons - always visible */}
+                {socialLinks.map((link) => (
+                  <a
+                    key={link.platform}
+                    href={link.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={link.platform}
+                    className={`transition-colors duration-200 ${
+                      isScrolled
+                        ? 'text-gray-500 hover:text-blue-600'
+                        : 'text-white/70 hover:text-white'
+                    }`}
+                  >
+                    {link.icon}
+                  </a>
+                ))}
+
+                {/* Hamburger button - mobile only */}
+                <button
+                  onClick={() => setIsDrawerOpen(true)}
+                  className={`lg:hidden p-2 rounded-lg transition-colors ${
                     isScrolled
-                      ? 'text-gray-500 hover:text-blue-600'
-                      : 'text-white/70 hover:text-white'
+                      ? 'text-gray-700 hover:bg-gray-100'
+                      : 'text-white hover:bg-white/10'
                   }`}
+                  aria-label="Abrir menu"
                 >
-                  {link.icon}
-                </a>
-              ))}
+                  <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M4 6h16M4 12h16M4 18h16" />
+                  </svg>
+                </button>
+              </div>
             </div>
+          </div>
+        </div>
+      </header>
+
+      {/* ===== SIDE DRAWER ===== */}
+      {/* Backdrop */}
+      <div
+        className={`fixed inset-0 bg-black/50 z-[60] transition-opacity duration-300 lg:hidden ${
+          isDrawerOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+        }`}
+        onClick={() => setIsDrawerOpen(false)}
+      />
+
+      {/* Drawer panel */}
+      <div
+        className={`fixed inset-y-0 right-0 w-72 bg-white shadow-2xl z-[70] transform transition-transform duration-300 ease-in-out lg:hidden ${
+          isDrawerOpen ? 'translate-x-0' : 'translate-x-full'
+        }`}
+      >
+        {/* Close button */}
+        <div className="flex justify-end p-4">
+          <button
+            onClick={() => setIsDrawerOpen(false)}
+            className="p-2 rounded-lg text-gray-500 hover:text-gray-700 hover:bg-gray-100 transition-colors"
+            aria-label="Fechar menu"
+          >
+            <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        {/* Nav links */}
+        <nav className="px-4 space-y-1">
+          {menuItems.map((item) => (
+            <button
+              key={item.href}
+              onClick={() => scrollToSection(item.href)}
+              className="block w-full text-left px-4 py-3 text-base font-extrabold uppercase tracking-wide text-gray-800 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+            >
+              {item.label}
+            </button>
+          ))}
+        </nav>
+
+        {/* Social icons inside drawer */}
+        <div className="px-4 mt-8 border-t border-gray-100 pt-6">
+          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Siga-nos</p>
+          <div className="flex items-center gap-4">
+            {socialLinks.map((link) => (
+              <a
+                key={link.platform}
+                href={link.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={link.platform}
+                className="text-gray-500 hover:text-blue-600 transition-colors"
+              >
+                {link.icon}
+              </a>
+            ))}
           </div>
         </div>
       </div>
-
-      {/* Mobile menu button */}
-      <button
-        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-        className={`lg:hidden absolute left-4 top-1/2 -translate-y-1/2 p-3 rounded-lg transition-colors ${
-          isScrolled
-            ? 'text-gray-700 hover:bg-gray-100'
-            : 'text-white hover:bg-white/10'
-        }`}
-      >
-        <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          {isMobileMenuOpen ? (
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
-          ) : (
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M4 6h16M4 12h16M4 18h16" />
-          )}
-        </svg>
-      </button>
-
-      {/* Mobile menu dropdown */}
-      {isMobileMenuOpen && (
-        <div className="lg:hidden bg-white border-t border-gray-200 shadow-lg">
-          <div className="px-4 pt-3 pb-4 space-y-1">
-            {menuItems.map((item) => (
-              <button
-                key={item.href}
-                onClick={() => scrollToSection(item.href)}
-                className="block w-full text-left px-4 py-3 text-base font-extrabold uppercase tracking-wide text-gray-800 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-              >
-                {item.label}
-              </button>
-            ))}
-          </div>
-          {/* Social icons in mobile menu */}
-          <div className="px-4 pb-4 border-t border-gray-100 pt-3">
-            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Siga-nos</p>
-            <div className="flex items-center gap-4">
-              {socialLinks.map((link) => (
-                <a
-                  key={link.platform}
-                  href={link.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={link.platform}
-                  className="text-gray-500 hover:text-blue-600 transition-colors"
-                >
-                  {link.icon}
-                </a>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
-    </header>
+    </>
   );
 }
