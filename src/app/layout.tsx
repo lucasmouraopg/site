@@ -1,12 +1,6 @@
 import type { Metadata } from 'next';
 import { Inter, Montserrat } from 'next/font/google';
 import './globals.css';
-import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
-import ScrollProgress from '@/components/ui/ScrollProgress';
-import ScrollToTop from '@/components/ui/ScrollToTop';
-import WhatsAppButton from '@/components/ui/WhatsAppButton';
-import LoadingScreen from '@/components/ui/LoadingScreen';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -89,13 +83,7 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${montserrat.variable} font-sans antialiased overflow-x-hidden`}
       >
-        <LoadingScreen />
-        <ScrollProgress />
-        <Header />
-        <main>{children}</main>
-        <Footer />
-        <WhatsAppButton />
-        <ScrollToTop />
+        {children}
       </body>
     </html>
   );
