@@ -1,6 +1,7 @@
 'use server';
 
-import { createClient } from '@supabase/supabase-js';
+import { createServerClient } from '@supabase/ssr';
+import { cookies } from 'next/headers';
 import { createAdminClient } from '@/lib/supabase-admin';
 import { revalidatePath } from 'next/cache';
 
@@ -16,7 +17,15 @@ async function requireAuth() {
   const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
   if (!url || !anonKey) throw new Error('Supabase not configured');
 
-  const supabase = createClient(url, anonKey);
+  const cookieStore = await cookies();
+
+  const supabase = createServerClient(url, anonKey, {
+    cookies: {
+      get(name: string) {
+        return cookieStore.get(name)?.value;
+      },
+    },
+  });
 
   const { data: { user }, error } = await supabase.auth.getUser();
   if (error || !user) {
