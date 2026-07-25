@@ -76,7 +76,7 @@ export default function TermosPage() {
             </h2>
             <p>
               O uso do site implica na aceitação integral e irrestrita dos
-              presentes Termos de Uso. O sebastian mourão reserva-se o direito
+              presentes Termos de Uso. O Lucas Mourão reserva-se o direito
               de alterar estes termos a qualquer momento, sendo responsabilidade
               do usuário verificar periodicamente as condições vigentes.
             </p>

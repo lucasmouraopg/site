@@ -57,7 +57,7 @@ export default function Hero() {
             className="flex flex-col sm:flex-row gap-4"
           >
             <a
-              href="https://www.canaldaBaixada.com.br"
+              href="https://www.canaldabaixada.com.br"
               target="_blank"
               rel="noopener noreferrer"
               className="px-8 py-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-all duration-300 hover:scale-105 hover:shadow-lg text-center uppercase tracking-wide"
@@ -107,7 +107,7 @@ export default function Hero() {
           className="flex flex-col gap-4"
         >
           <a
-            href="https://www.canaldaBaixada.com.br"
+            href="https://www.canaldabaixada.com.br"
             target="_blank"
             rel="noopener noreferrer"
             className="w-full px-6 py-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-all duration-300 text-center uppercase tracking-wide"

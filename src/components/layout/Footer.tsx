@@ -77,7 +77,7 @@ export default function Footer() {
               ))}
             </div>
             <a
-              href="https://www.canaldaBaixada.com.br"
+              href="https://www.canaldabaixada.com.br"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-block mt-6 px-8 py-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-all duration-300 hover:scale-105 hover:shadow-lg uppercase tracking-wide"

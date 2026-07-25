@@ -6,7 +6,8 @@ const menuItems = [
   { label: 'Home', href: '/#home' },
   { label: 'Biografia', href: '/#biografia' },
   { label: 'Praia Grande', href: '/#praia-grande' },
-  { label: 'Redes Sociais', href: '/#redes-sociais' },
+  { label: 'Agenda', href: '/#agenda' },
+  { label: 'Galeria', href: '/galeria' },
 ];
 
 const socialLinks = [
@@ -71,6 +72,10 @@ export default function Header() {
 
   const scrollToSection = (href: string) => {
     setIsDrawerOpen(false);
+    if (href.startsWith('/')) {
+      window.location.href = href;
+      return;
+    }
     const selector = href.replace(/^\//, '');
     setTimeout(() => {
       const element = document.querySelector(selector);

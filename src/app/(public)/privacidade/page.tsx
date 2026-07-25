@@ -41,9 +41,9 @@ export default function PrivacidadePage() {
 
           <div className="prose prose-gray max-w-none space-y-6 text-gray-700 leading-relaxed">
             <p>
-              A sua privacidade é importante para nós. É política do Lucas Mourão
+              A sua privacidade é importante para Lucas Mourão. É política do Lucas Mourão
               respeitar a sua privacidade em relação a qualquer informação sua
-              que possamos coletar no site{' '}
+              que possa ser coletada no site{' '}
               <a
                 href="https://www.lucasmourao.com.br"
                 className="text-blue-600 hover:underline"
@@ -54,35 +54,36 @@ export default function PrivacidadePage() {
             </p>
 
             <p>
-              Solicitamos informações pessoais apenas quando realmente
-              precisamos delas para lhe fornecer um serviço. Fazemo-lo por
-              meios justos e legais, com o seu conhecimento e consentimento.
-              Também informamos por que estamos coletando e como será usado.
+              Solicitam-se informações pessoais apenas quando realmente
+              necessárias para fornecer um serviço. Isso é feito por
+              meios justos e legais, com o conhecimento e consentimento do
+              titular. Lucas Mourão informa por que coleta e como será
+              utilizado.
             </p>
 
             <p>
-              Apenas retemos as informações coletadas pelo tempo necessário para
-              fornecer o serviço solicitado. Quando armazenamos dados, protegemos
+              Lucas Mourão retém apenas as informações coletadas pelo tempo necessário para
+              fornecer o serviço solicitado. Quando armazenados, os dados são protegidos
               dentro de meios comercialmente aceitáveis para evitar perdas e
               roubos, bem como acesso, divulgação, cópia, uso ou modificação não
               autorizados.
             </p>
 
             <p>
-              Não compartilhamos informações de identificação pessoal publicamente
+              Lucas Mourão não compartilha informações de identificação pessoal publicamente
               ou com terceiros, exceto quando exigido por lei.
             </p>
 
             <p>
-              O nosso site pode ter links para sites externos que não são
-              operados por nós. Esteja ciente de que não temos controle sobre o
-              conteúdo e práticas desses sites, e não podemos aceitar
+              O site de Lucas Mourão pode ter links para sites externos que não são
+              operados por ele. Esteja ciente de que não há controle sobre o
+              conteúdo e práticas desses sites, e Lucas Mourão não pode aceitar
               responsabilidade por suas respectivas políticas de privacidade.
             </p>
 
             <p>
-              O uso continuado do nosso site será considerado como aceitação das
-              nossas práticas em relação à privacidade e informações pessoais.
+              O uso continuado do site será considerado como aceitação das
+              práticas de Lucas Mourão em relação à privacidade e informações pessoais.
               Se você tiver alguma dúvida sobre como os dados de usuários e
               visitantes são tratados pelo site{' '}
               <a
@@ -204,7 +205,7 @@ export default function PrivacidadePage() {
             </p>
 
             <p>
-              Não realizamos decisões automatizadas com base em dados pessoais que
+              Lucas Mourão não realiza decisões automatizadas com base em dados pessoais que
               produzam efeitos jurídicos ou significativos para os titulares, sem
               supervisão humana adequada. Caso esse tipo de tratamento seja
               necessário, será solicitado consentimento específico, conforme Art.
@@ -227,7 +228,7 @@ export default function PrivacidadePage() {
             </h2>
 
             <p>
-              São adotadas medidas de segurança, técnicas e administrativas aptas
+              Lucas Mourão adota medidas de segurança, técnicas e administrativas aptas
               a proteger os dados pessoais de acessos não autorizados e de
               situações acidentais ou ilícitas de destruição, perda, alteração,
               comunicação ou qualquer forma de tratamento inadequado ou ilícito,
@@ -299,7 +300,7 @@ export default function PrivacidadePage() {
             </h2>
 
             <p>
-              Reservamo-nos o direito de modificar esta Política de Privacidade a
+              Lucas Mourão reserva-se o direito de modificar esta Política de Privacidade a
               qualquer momento, visando sempre a conformidade com a legislação
               vigente e a proteção dos direitos dos titulares de dados. Qualquer
               alteração será publicada nesta página com a data de atualização

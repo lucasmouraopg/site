@@ -1,10 +1,8 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { WeatherData } from '@/lib/weather';
-
-const DEFAULT_CITY_COUNT = 7;
 
 function getBgClasses(main: string): string {
   const map: Record<string, string> = {
@@ -24,6 +22,7 @@ function getBgClasses(main: string): string {
 export default function WeatherWidget() {
   const [weatherList, setWeatherList] = useState<WeatherData[]>([]);
   const [cityIndex, setCityIndex] = useState(0);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const loadWeather = useCallback(async () => {
     try {
@@ -53,18 +52,33 @@ export default function WeatherWidget() {
     }
   }, []);
 
-  useEffect(() => {
-    loadWeather();
-
-    const interval = setInterval(() => {
+  const resetTimer = useCallback(() => {
+    if (intervalRef.current) clearInterval(intervalRef.current);
+    intervalRef.current = setInterval(() => {
       setCityIndex((prev) => {
         if (weatherList.length === 0) return 0;
         return (prev + 1) % weatherList.length;
       });
     }, 6000);
+  }, [weatherList.length]);
 
-    return () => clearInterval(interval);
-  }, [loadWeather, weatherList.length]);
+  useEffect(() => {
+    loadWeather();
+    resetTimer();
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, [loadWeather, resetTimer]);
+
+  const prevCity = () => {
+    setCityIndex((prev) => (prev === 0 ? weatherList.length - 1 : prev - 1));
+    resetTimer();
+  };
+
+  const nextCity = () => {
+    setCityIndex((prev) => (prev + 1) % weatherList.length);
+    resetTimer();
+  };
 
   if (weatherList.length === 0) {
     return (
@@ -171,18 +185,38 @@ export default function WeatherWidget() {
             </div>
           </div>
 
-          {/* Dots indicator */}
-          <div className="flex justify-center gap-1.5 mt-4 pt-3 border-t border-white/10">
-            {Array.from({ length: Math.min(totalDots, 8) }).map((_, i) => (
-              <div
-                key={i}
-                className={`h-1.5 rounded-full transition-all duration-300 ${
-                  i === cityIndex
-                    ? 'bg-emerald-400 w-4'
-                    : 'bg-white/20 w-1.5'
-                }`}
-              />
-            ))}
+          {/* Navigation: ← dots → */}
+          <div className="flex items-center justify-center gap-3 mt-4 pt-3 border-t border-white/10">
+            <button
+              onClick={prevCity}
+              className="text-white/40 hover:text-white/80 transition-colors"
+              aria-label="Cidade anterior"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+
+            <div className="flex gap-1.5">
+              {Array.from({ length: Math.min(totalDots, 8) }).map((_, i) => (
+                <div
+                  key={i}
+                  className={`h-1.5 w-1.5 rounded-full transition-all duration-300 ${
+                    i === cityIndex ? 'bg-emerald-400' : 'bg-white/20'
+                  }`}
+                />
+              ))}
+            </div>
+
+            <button
+              onClick={nextCity}
+              className="text-white/40 hover:text-white/80 transition-colors"
+              aria-label="Próxima cidade"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
           </div>
         </motion.div>
       </AnimatePresence>
