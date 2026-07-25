@@ -21,7 +21,7 @@ export default function Newsletter() {
           >
             <div className="text-center sm:text-left">
               <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-1">
-                Fique por dentro
+                NEWSLETTER
               </h2>
               <p className="text-gray-500 text-sm md:text-base">
                 Receba em primeira mão as notícias sobre Praia Grande e a pré-campanha de Lucas Mourão
