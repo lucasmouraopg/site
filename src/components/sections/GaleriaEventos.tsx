@@ -67,7 +67,7 @@ export default function GaleriaEventos() {
         </h2>
 
         {albuns.length === 0 ? (
-          <p className="text-gray-400 text-sm">Nenhum álbum publicado no momento.</p>
+          <p className="text-gray-400 text-sm text-center">Nenhum álbum publicado no momento.</p>
         ) : (
           <>
             {/* Desktop: grid */}
