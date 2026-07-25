@@ -130,7 +130,7 @@ export default function Agenda() {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-8">
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-8 uppercase text-center">
             Agenda
           </h2>
         </motion.div>

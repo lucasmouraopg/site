@@ -130,7 +130,7 @@ export default function Biografia() {
           transition={{ duration: 0.6 }}
           className="text-center mb-12"
         >
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 uppercase text-center">
             Raízes que moldam um novo tempo
           </h2>
         </motion.div>

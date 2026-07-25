@@ -19,8 +19,8 @@ export default function Newsletter() {
             transition={{ duration: 0.6 }}
             className="flex flex-col sm:flex-row items-center justify-between gap-6"
           >
-            <div className="text-center sm:text-left">
-              <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-1">
+            <div className="text-center">
+              <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-1 uppercase text-center">
                 NEWSLETTER
               </h2>
               <p className="text-gray-500 text-sm md:text-base">

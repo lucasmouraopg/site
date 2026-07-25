@@ -128,7 +128,7 @@ export default function RedesSociais() {
           transition={{ duration: 0.6 }}
           className="text-center mb-12"
         >
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 uppercase text-center">
             Redes Sociais
           </h2>
         </motion.div>
