@@ -47,12 +47,12 @@ export default function Footer() {
     <footer className="relative bg-gray-900 text-white overflow-hidden">
       {/* Background: OG image */}
       <div
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-10"
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-25"
         style={{
           backgroundImage: 'url(/assets/images/og/og-image.jpg)',
         }}
       />
-      <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/95 to-gray-900/80" />
+      <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/90 to-gray-900/70" />
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         

@@ -1,7 +1,6 @@
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import ScrollProgress from '@/components/ui/ScrollProgress';
-import ScrollToTop from '@/components/ui/ScrollToTop';
 import WhatsAppButton from '@/components/ui/WhatsAppButton';
 import LoadingScreen from '@/components/ui/LoadingScreen';
 
@@ -18,7 +17,6 @@ export default function PublicLayout({
       <main>{children}</main>
       <Footer />
       <WhatsAppButton />
-      <ScrollToTop />
     </>
   );
 }
