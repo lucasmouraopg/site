@@ -17,7 +17,7 @@ export default function Newsletter() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="flex flex-col sm:flex-row items-center justify-between gap-6"
+            className="flex flex-col items-center justify-center text-center gap-4"
           >
             <div className="text-center">
               <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-1 uppercase text-center">
