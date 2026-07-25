@@ -40,6 +40,30 @@ function formatTime(dateStr: string) {
   });
 }
 
+function CardContent({ item }: { item: Compromisso }) {
+  return (
+    <>
+      <div className="flex items-center gap-3 mb-3">
+        <div className="flex-shrink-0 w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center">
+          <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+          </svg>
+        </div>
+        <div>
+          <p className="text-xs text-blue-600 font-semibold capitalize">{formatDateShort(item.data_hora)}</p>
+          <p className="text-xs text-gray-400">{formatTime(item.data_hora)}</p>
+        </div>
+      </div>
+      <h3 className="font-semibold text-gray-900 text-sm group-hover:text-blue-600 transition-colors line-clamp-2">
+        {item.titulo}
+      </h3>
+      {item.local && (
+        <p className="text-xs text-gray-400 mt-1.5 line-clamp-1">{item.local}</p>
+      )}
+    </>
+  );
+}
+
 export default function Agenda() {
   const [compromissos, setCompromissos] = useState<Compromisso[]>([]);
   const [loading, setLoading] = useState(true);
@@ -97,8 +121,6 @@ export default function Agenda() {
     );
   }
 
-  if (compromissos.length === 0) return null;
-
   return (
     <section id="agenda" className="py-16 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -113,95 +135,68 @@ export default function Agenda() {
           </h2>
         </motion.div>
 
-        {/* Desktop: horizontal grid */}
-        <div className="hidden lg:grid lg:grid-cols-3 xl:grid-cols-5 gap-6">
-          {compromissos.map((item) => (
-            <button
-              key={item.id}
-              onClick={() => setSelected(item)}
-              className="text-left bg-white rounded-2xl border border-gray-100 p-5 hover:shadow-lg transition-all duration-300 group cursor-pointer"
-            >
-              <div className="flex items-center gap-3 mb-3">
-                <div className="flex-shrink-0 w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center">
-                  <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                  </svg>
-                </div>
-                <div>
-                  <p className="text-xs text-blue-600 font-semibold capitalize">{formatDateShort(item.data_hora)}</p>
-                  <p className="text-xs text-gray-400">{formatTime(item.data_hora)}</p>
-                </div>
-              </div>
-              <h3 className="font-semibold text-gray-900 text-sm group-hover:text-blue-600 transition-colors line-clamp-2">
-                {item.titulo}
-              </h3>
-              {item.local && (
-                <p className="text-xs text-gray-400 mt-1.5 line-clamp-1">{item.local}</p>
-              )}
-            </button>
-          ))}
-        </div>
-
-        {/* Mobile: Embla carousel */}
-        <div className="lg:hidden relative">
-          <div className="overflow-hidden" ref={emblaRef}>
-            <div className="flex gap-4">
+        {compromissos.length === 0 ? (
+          <p className="text-gray-400 text-sm">Nenhum compromisso agendado no momento.</p>
+        ) : (
+          <>
+            {/* Desktop: horizontal grid */}
+            <div className="hidden lg:grid lg:grid-cols-3 xl:grid-cols-5 gap-6">
               {compromissos.map((item) => (
                 <button
                   key={item.id}
                   onClick={() => setSelected(item)}
-                  className="flex-none w-[calc(100%-16px)] text-left bg-white rounded-2xl border border-gray-100 p-5 hover:shadow-lg transition-all duration-300 group cursor-pointer"
+                  className="text-left bg-white rounded-2xl border border-gray-100 p-5 hover:shadow-lg transition-all duration-300 group cursor-pointer"
                 >
-                  <div className="flex items-center gap-3 mb-3">
-                    <div className="flex-shrink-0 w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center">
-                      <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                      </svg>
-                    </div>
-                    <div>
-                      <p className="text-xs text-blue-600 font-semibold capitalize">{formatDateShort(item.data_hora)}</p>
-                      <p className="text-xs text-gray-400">{formatTime(item.data_hora)}</p>
-                    </div>
-                  </div>
-                  <h3 className="font-semibold text-gray-900 text-sm group-hover:text-blue-600 transition-colors line-clamp-2">
-                    {item.titulo}
-                  </h3>
-                  {item.local && (
-                    <p className="text-xs text-gray-400 mt-1.5 line-clamp-1">{item.local}</p>
-                  )}
+                  <CardContent item={item} />
                 </button>
               ))}
             </div>
-          </div>
 
-          {/* Arrows */}
-          {compromissos.length > 1 && (
-            <>
-              <button
-                onClick={scrollPrev}
-                disabled={!canScrollPrev}
-                className={`absolute -left-3 top-1/2 -translate-y-1/2 z-20 flex items-center justify-center w-9 h-9 rounded-full bg-white shadow-lg border border-gray-200 transition-all duration-200 hover:bg-white hover:scale-110 ${
-                  !canScrollPrev ? 'opacity-30 cursor-default hover:scale-100' : 'cursor-pointer'
-                }`}
-              >
-                <svg className="w-4 h-4 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-                </svg>
-              </button>
-              <button
-                onClick={scrollNext}
-                disabled={!canScrollNext}
-                className={`absolute -right-3 top-1/2 -translate-y-1/2 z-20 flex items-center justify-center w-9 h-9 rounded-full bg-white shadow-lg border border-gray-200 transition-all duration-200 hover:bg-white hover:scale-110 ${
-                  !canScrollNext ? 'opacity-30 cursor-default hover:scale-100' : 'cursor-pointer'
-                }`}
-              >
-                <svg className="w-4 h-4 text-gray-700 rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-                </svg>
-              </button>
-            </>
-          )}
-        </div>
+            {/* Mobile: Embla carousel */}
+            <div className="lg:hidden relative">
+              <div className="overflow-hidden" ref={emblaRef}>
+                <div className="flex gap-4">
+                  {compromissos.map((item) => (
+                    <button
+                      key={item.id}
+                      onClick={() => setSelected(item)}
+                      className="flex-none w-[calc(100%-16px)] text-left bg-white rounded-2xl border border-gray-100 p-5 hover:shadow-lg transition-all duration-300 group cursor-pointer"
+                    >
+                      <CardContent item={item} />
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {compromissos.length > 1 && (
+                <>
+                  <button
+                    onClick={scrollPrev}
+                    disabled={!canScrollPrev}
+                    className={`absolute -left-3 top-1/2 -translate-y-1/2 z-20 flex items-center justify-center w-9 h-9 rounded-full bg-white shadow-lg border border-gray-200 transition-all duration-200 hover:bg-white hover:scale-110 ${
+                      !canScrollPrev ? 'opacity-30 cursor-default hover:scale-100' : 'cursor-pointer'
+                    }`}
+                  >
+                    <svg className="w-4 h-4 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                    </svg>
+                  </button>
+                  <button
+                    onClick={scrollNext}
+                    disabled={!canScrollNext}
+                    className={`absolute -right-3 top-1/2 -translate-y-1/2 z-20 flex items-center justify-center w-9 h-9 rounded-full bg-white shadow-lg border border-gray-200 transition-all duration-200 hover:bg-white hover:scale-110 ${
+                      !canScrollNext ? 'opacity-30 cursor-default hover:scale-100' : 'cursor-pointer'
+                    }`}
+                  >
+                    <svg className="w-4 h-4 text-gray-700 rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                    </svg>
+                  </button>
+                </>
+              )}
+            </div>
+          </>
+        )}
       </div>
 
       {/* Modal de detalhes */}

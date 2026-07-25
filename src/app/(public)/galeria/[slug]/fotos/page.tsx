@@ -1,18 +1,17 @@
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
-import type { GaleriaAlbum, GaleriaFoto, Video } from '@/lib/supabase';
-import AlbumDetail from './AlbumDetail';
+import type { GaleriaAlbum, GaleriaFoto } from '@/lib/supabase';
+import FotosGrid from '@/app/(public)/galeria/fotos/FotosGrid';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
-export default async function AlbumPage({ params }: PageProps) {
+export default async function AlbumFotosPage({ params }: PageProps) {
   const { slug } = await params;
 
   let album: GaleriaAlbum | null = null;
   let fotos: GaleriaFoto[] = [];
-  let videos: Video[] = [];
 
   try {
     const { data: albumData } = await supabase
@@ -24,24 +23,16 @@ export default async function AlbumPage({ params }: PageProps) {
     album = albumData;
 
     if (album) {
-      const { data: fotosData } = await supabase
+      const { data } = await supabase
         .from('galeria_fotos')
         .select('*')
         .eq('album_id', album.id)
         .order('ordem', { ascending: true });
 
-      fotos = fotosData || [];
-
-      const { data: videosData } = await supabase
-        .from('videos')
-        .select('*')
-        .eq('status', 'publicado')
-        .order('ordem', { ascending: true });
-
-      videos = videosData || [];
+      fotos = data || [];
     }
   } catch {
-    // album not found
+    // not found
   }
 
   if (!album) {
@@ -62,21 +53,20 @@ export default async function AlbumPage({ params }: PageProps) {
   return (
     <section className="py-16 bg-white min-h-screen">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <Link href="/galeria" className="inline-flex items-center text-sm text-gray-500 hover:text-gray-700 mb-8">
-          ← Voltar à Galeria
+        <Link href={`/galeria/${album.id}`} className="inline-flex items-center text-sm text-gray-500 hover:text-gray-700 mb-8">
+          ← Voltar ao álbum
         </Link>
 
-        <div className="mb-8">
-          <span className="bg-blue-50 text-blue-700 text-[11px] font-semibold uppercase tracking-wider px-3 py-1 rounded-full">
-            {album.categoria}
-          </span>
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mt-3">{album.titulo}</h1>
-          {album.descricao && (
-            <p className="text-gray-500 mt-2 max-w-2xl">{album.descricao}</p>
-          )}
-        </div>
+        <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">{album.titulo}</h1>
+        <p className="text-gray-500 mb-10">{fotos.length} {fotos.length === 1 ? 'foto' : 'fotos'}</p>
 
-        <AlbumDetail albumId={album.id} fotos={fotos} videos={videos} />
+        {fotos.length === 0 ? (
+          <div className="text-center py-20 text-gray-400">
+            <p>Nenhuma foto publicada neste álbum.</p>
+          </div>
+        ) : (
+          <FotosGrid fotos={fotos} />
+        )}
       </div>
     </section>
   );

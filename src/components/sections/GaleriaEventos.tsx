@@ -46,7 +46,7 @@ export default function GaleriaEventos() {
 
   if (loading) {
     return (
-      <section className="py-16 bg-white">
+      <section id="galeria" className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="h-8 bg-gray-200 rounded w-64 mb-8 animate-pulse" />
           <div className="flex gap-6 overflow-hidden">
@@ -61,10 +61,10 @@ export default function GaleriaEventos() {
 
   if (albuns.length === 0) {
     return (
-      <section className="py-16 bg-white">
+      <section id="galeria" className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-8">
-            Galeria de Eventos
+            GALERIA
           </h2>
           <p className="text-gray-400 text-sm">Nenhum álbum publicado no momento.</p>
         </div>
@@ -73,21 +73,13 @@ export default function GaleriaEventos() {
   }
 
   return (
-    <section className="py-16 bg-white">
+    <section id="galeria" className="py-16 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between mb-8">
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
-            Galeria de Eventos
-          </h2>
-          <Link
-            href="/galeria"
-            className="text-sm font-semibold text-blue-600 hover:text-blue-700 transition-colors"
-          >
-            Ver todas →
-          </Link>
-        </div>
+        <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-8">
+          GALERIA
+        </h2>
 
-        {/* Desktop: grid (hidden on mobile) */}
+        {/* Desktop: grid */}
         <div className="hidden lg:grid lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {albuns.map((album) => (
             <Link
@@ -166,7 +158,6 @@ export default function GaleriaEventos() {
             </div>
           </div>
 
-          {/* Arrows */}
           {albuns.length > 1 && (
             <>
               <button
@@ -193,6 +184,16 @@ export default function GaleriaEventos() {
               </button>
             </>
           )}
+        </div>
+
+        {/* CTA Button */}
+        <div className="text-center mt-10">
+          <Link
+            href="/galeria"
+            className="inline-block px-8 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-all duration-300 hover:scale-105 hover:shadow-lg"
+          >
+            Veja todos os álbuns
+          </Link>
         </div>
       </div>
     </section>
