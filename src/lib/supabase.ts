@@ -31,6 +31,7 @@ export interface Video {
   descricao: string;
   youtube_url: string;
   thumbnail_url: string;
+  album_id: string | null;
   categoria: string;
   ordem: number;
   status: 'publicado' | 'rascunho';

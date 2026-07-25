@@ -216,6 +216,7 @@ export async function criarVideo(formData: {
   titulo: string;
   descricao: string;
   youtube_url: string;
+  album_id: string;
   categoria: string;
   status: string;
 }) {
@@ -227,6 +228,7 @@ export async function criarVideo(formData: {
   const youtube_url = formData.youtube_url.trim();
   const categoria = sanitize(formData.categoria);
   const status = formData.status === 'publicado' ? 'publicado' : 'rascunho';
+  const album_id = formData.album_id && isValidUUID(formData.album_id) ? formData.album_id : null;
 
   if (!titulo || !categoria || !validateYouTubeUrl(youtube_url)) {
     return { error: 'Campos obrigatórios inválidos.' };
@@ -236,6 +238,7 @@ export async function criarVideo(formData: {
     titulo,
     descricao,
     youtube_url,
+    album_id,
     categoria,
     status,
   });
@@ -569,6 +572,7 @@ export async function editarVideo(
     titulo: string;
     descricao: string;
     youtube_url: string;
+    album_id: string;
     categoria: string;
     status: string;
   }
@@ -583,6 +587,7 @@ export async function editarVideo(
   const youtube_url = formData.youtube_url.trim();
   const categoria = sanitize(formData.categoria);
   const status = formData.status === 'publicado' ? 'publicado' : 'rascunho';
+  const album_id = formData.album_id && isValidUUID(formData.album_id) ? formData.album_id : null;
 
   if (!titulo || !categoria || !validateYouTubeUrl(youtube_url)) {
     return { error: 'Campos obrigatórios inválidos.' };
@@ -590,7 +595,7 @@ export async function editarVideo(
 
   const { error } = await supabase
     .from('videos')
-    .update({ titulo, descricao, youtube_url, categoria, status })
+    .update({ titulo, descricao, youtube_url, album_id, categoria, status })
     .eq('id', id);
 
   if (error) return { error: 'Erro ao atualizar vídeo.' };

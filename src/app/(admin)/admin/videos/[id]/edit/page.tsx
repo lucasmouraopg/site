@@ -14,25 +14,33 @@ export default function EditarVideoPage() {
   const [titulo, setTitulo] = useState('');
   const [descricao, setDescricao] = useState('');
   const [youtubeUrl, setYoutubeUrl] = useState('');
+  const [albumId, setAlbumId] = useState('');
   const [categoria, setCategoria] = useState('');
   const [status, setStatus] = useState<'publicado' | 'rascunho'>('rascunho');
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
+  const [albuns, setAlbuns] = useState<{ id: string; titulo: string }[]>([]);
 
   useEffect(() => {
-    const fetchVideo = async () => {
-      const { data } = await supabase.from('videos').select('*').eq('id', id).single();
-      if (data) {
-        setTitulo(data.titulo);
-        setDescricao(data.descricao || '');
-        setYoutubeUrl(data.youtube_url);
-        setCategoria(data.categoria);
-        setStatus(data.status);
+    const fetchData = async () => {
+      const [videoRes, albunsRes] = await Promise.all([
+        supabase.from('videos').select('*').eq('id', id).single(),
+        supabase.from('galeria_albuns').select('id, titulo').order('titulo', { ascending: true }),
+      ]);
+
+      if (videoRes.data) {
+        setTitulo(videoRes.data.titulo);
+        setDescricao(videoRes.data.descricao || '');
+        setYoutubeUrl(videoRes.data.youtube_url);
+        setAlbumId(videoRes.data.album_id || '');
+        setCategoria(videoRes.data.categoria);
+        setStatus(videoRes.data.status);
       }
+      if (albunsRes.data) setAlbuns(albunsRes.data);
       setLoading(false);
     };
-    fetchVideo();
+    fetchData();
   }, [id]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -45,6 +53,7 @@ export default function EditarVideoPage() {
         titulo,
         descricao,
         youtube_url: youtubeUrl,
+        album_id: albumId,
         categoria,
         status,
       });
@@ -92,6 +101,17 @@ export default function EditarVideoPage() {
           </div>
 
           <div className="grid grid-cols-2 gap-6">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Álbum (Opcional)</label>
+              <select value={albumId} onChange={(e) => setAlbumId(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                <option value="">Nenhum</option>
+                {albuns.map((album) => (
+                  <option key={album.id} value={album.id}>{album.titulo}</option>
+                ))}
+              </select>
+            </div>
+
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Categoria *</label>
               <select required value={categoria} onChange={(e) => setCategoria(e.target.value)}

@@ -125,10 +125,22 @@ export default function AdminDashboard() {
             Novo Álbum
           </Link>
           <Link
+            href="/admin/galeria"
+            className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors"
+          >
+            Adicionar Foto
+          </Link>
+          <Link
             href="/admin/videos/novo"
             className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
           >
             Novo Vídeo
+          </Link>
+          <Link
+            href="/admin/agenda/novo"
+            className="px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 transition-colors"
+          >
+            Novo Compromisso
           </Link>
         </div>
       </div>
