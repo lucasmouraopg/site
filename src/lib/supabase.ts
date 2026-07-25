@@ -143,33 +143,15 @@ export async function getConfiguracoes(chaves: string[]) {
 }
 
 export async function getProjetos(): Promise<Projeto[]> {
-  try {
-    const { data, error } = await supabase
-      .from('projetos')
-      .select('*')
-      .eq('status', 'publicado')
-      .order('ordem', { ascending: true })
-      .limit(100);
+  const { data, error } = await supabase
+    .from('projetos')
+    .select('*')
+    .eq('status', 'publicado')
+    .order('ordem', { ascending: true })
+    .limit(100);
 
-    if (error) throw error;
-    if (data && data.length > 0) return data as Projeto[];
-  } catch {}
-
-  const { projetos } = await import('@/data/projetos');
-  return projetos.map((p) => ({
-    id: p.slug,
-    slug: p.slug,
-    titulo: p.titulo,
-    resumo: p.resumo,
-    descricao: p.descricao,
-    categoria: p.categoria,
-    fotos: p.fotos,
-    share_text: p.shareText,
-    ordem: 0,
-    status: 'publicado' as const,
-    criado_em: '',
-    atualizado_em: '',
-  }));
+  if (error) throw error;
+  return (data ?? []) as Projeto[];
 }
 
 export async function getProjetoBySlug(slug: string): Promise<Projeto> {
