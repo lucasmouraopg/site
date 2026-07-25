@@ -34,10 +34,7 @@ export default function FormularioLeads() {
 
   return (
     <div className="bg-white rounded-2xl shadow-lg p-6 md:p-8">
-      <h3 className="text-xl font-bold text-gray-900 mb-2">Fale Comigo</h3>
-      <p className="text-gray-500 text-sm mb-6">
-        Deixe seus dados e entraremos em contato o mais breve possível.
-      </p>
+      <h3 className="text-xl font-bold text-gray-900 mb-4">INSCREVA-SE</h3>
 
       {status === 'success' && (
         <div className="bg-green-50 border border-green-200 text-green-700 rounded-lg p-4 mb-6 text-sm">

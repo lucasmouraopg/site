@@ -8,6 +8,7 @@ const menuItems = [
   { label: 'Praia Grande', href: '/#praia-grande' },
   { label: 'Agenda', href: '/#agenda' },
   { label: 'Galeria', href: '/galeria' },
+  { label: 'Redes Sociais', href: '/#redes-sociais' },
 ];
 
 const socialLinks = [

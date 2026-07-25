@@ -39,10 +39,6 @@ export default function Newsletter() {
 
       <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
         <div className="p-6 md:p-8">
-          <h3 className="text-xl font-bold text-gray-900 mb-2">Inscreva-se</h3>
-          <p className="text-gray-500 text-sm mb-6">
-            Preencha seus dados para receber as novidades da campanha.
-          </p>
           <FormularioLeads />
         </div>
       </Modal>
