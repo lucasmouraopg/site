@@ -125,7 +125,7 @@ export default function AdminDashboard() {
             Novo Álbum
           </Link>
           <Link
-            href="/admin/galeria"
+            href="/admin/galeria/adicionar-foto"
             className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors"
           >
             Adicionar Foto

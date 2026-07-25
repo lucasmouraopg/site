@@ -228,17 +228,20 @@ export async function criarVideo(formData: {
   const youtube_url = formData.youtube_url.trim();
   const categoria = sanitize(formData.categoria);
   const status = formData.status === 'publicado' ? 'publicado' : 'rascunho';
-  const album_id = formData.album_id && isValidUUID(formData.album_id) ? formData.album_id : null;
 
   if (!titulo || !categoria || !validateYouTubeUrl(youtube_url)) {
     return { error: 'Campos obrigatórios inválidos.' };
+  }
+
+  if (!formData.album_id || !isValidUUID(formData.album_id)) {
+    return { error: 'Selecione um álbum válido.' };
   }
 
   const { error } = await supabase.from('videos').insert({
     titulo,
     descricao,
     youtube_url,
-    album_id,
+    album_id: formData.album_id,
     categoria,
     status,
   });
@@ -587,15 +590,18 @@ export async function editarVideo(
   const youtube_url = formData.youtube_url.trim();
   const categoria = sanitize(formData.categoria);
   const status = formData.status === 'publicado' ? 'publicado' : 'rascunho';
-  const album_id = formData.album_id && isValidUUID(formData.album_id) ? formData.album_id : null;
 
   if (!titulo || !categoria || !validateYouTubeUrl(youtube_url)) {
     return { error: 'Campos obrigatórios inválidos.' };
   }
 
+  if (!formData.album_id || !isValidUUID(formData.album_id)) {
+    return { error: 'Selecione um álbum válido.' };
+  }
+
   const { error } = await supabase
     .from('videos')
-    .update({ titulo, descricao, youtube_url, album_id, categoria, status })
+    .update({ titulo, descricao, youtube_url, album_id: formData.album_id, categoria, status })
     .eq('id', id);
 
   if (error) return { error: 'Erro ao atualizar vídeo.' };
