@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
-import { excluirCompromisso } from '../actions';
+import { excluirCompromisso, toggleStatusCompromisso } from '../actions';
 
 interface Compromisso {
   id: string;
@@ -36,6 +36,11 @@ export default function AgendaPage() {
   const handleDelete = async (id: string) => {
     if (!confirm('Tem certeza que deseja excluir este compromisso?')) return;
     await excluirCompromisso(id);
+    fetchCompromissos();
+  };
+
+  const handleToggleStatus = async (id: string) => {
+    await toggleStatusCompromisso(id);
     fetchCompromissos();
   };
 
@@ -86,9 +91,17 @@ export default function AgendaPage() {
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
                       item.status === 'publicado' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
-                    }`}>{item.status}</span>
+                    }`}>{item.status === 'publicado' ? 'Publicado' : 'Rascunho'}</span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <button
+                      onClick={() => handleToggleStatus(item.id)}
+                      className={`mr-4 text-xs font-semibold ${
+                        item.status === 'publicado' ? 'text-yellow-600 hover:text-yellow-900' : 'text-green-600 hover:text-green-900'
+                      }`}
+                    >
+                      {item.status === 'publicado' ? 'Ocultar' : 'Publicar'}
+                    </button>
                     <a href={`/admin/agenda/${item.id}/edit`} className="text-blue-600 hover:text-blue-900 mr-4">
                       Editar
                     </a>

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { supabase, Video } from '@/lib/supabase';
-import { excluirVideo } from '../actions';
+import { excluirVideo, toggleStatusVideo } from '../actions';
 
 
 export default function VideosPage() {
@@ -26,6 +26,11 @@ export default function VideosPage() {
   const handleDelete = async (id: string) => {
     if (!confirm('Tem certeza que deseja excluir este vídeo?')) return;
     await excluirVideo(id);
+    fetchVideos();
+  };
+
+  const handleToggleStatus = async (id: string) => {
+    await toggleStatusVideo(id);
     fetchVideos();
   };
 
@@ -64,9 +69,17 @@ export default function VideosPage() {
                   <td className="px-6 py-4">
                     <span className={`px-2 inline-flex text-xs font-semibold rounded-full ${
                       video.status === 'publicado' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
-                    }`}>{video.status}</span>
+                    }`}>{video.status === 'publicado' ? 'Publicado' : 'Rascunho'}</span>
                   </td>
                   <td className="px-6 py-4 text-right text-sm font-medium">
+                    <button
+                      onClick={() => handleToggleStatus(video.id)}
+                      className={`mr-4 text-xs font-semibold ${
+                        video.status === 'publicado' ? 'text-yellow-600 hover:text-yellow-900' : 'text-green-600 hover:text-green-900'
+                      }`}
+                    >
+                      {video.status === 'publicado' ? 'Ocultar' : 'Publicar'}
+                    </button>
                     <a href={`/admin/videos/${video.id}/edit`} className="text-blue-600 hover:text-blue-900 mr-4">
                       Editar
                     </a>

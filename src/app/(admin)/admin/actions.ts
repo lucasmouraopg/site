@@ -187,6 +187,27 @@ export async function excluirAlbum(id: string) {
   return { success: true };
 }
 
+export async function toggleStatusAlbum(id: string) {
+  try { await requireAuth(); } catch { return { error: 'Não autenticado.' }; }
+  if (!isValidUUID(id)) return { error: 'ID inválido.' };
+
+  const supabase = getAdmin();
+
+  const { data: album, error: fetchError } = await supabase
+    .from('galeria_albuns')
+    .select('status')
+    .eq('id', id)
+    .single();
+
+  if (fetchError || !album) return { error: 'Álbum não encontrado.' };
+
+  const newStatus = album.status === 'publicado' ? 'rascunho' : 'publicado';
+  const { error } = await supabase.from('galeria_albuns').update({ status: newStatus }).eq('id', id);
+  if (error) return { error: 'Erro ao atualizar status.' };
+  revalidatePath('/admin/galeria');
+  return { success: true };
+}
+
 // ============================================
 // Videos
 // ============================================
@@ -231,6 +252,27 @@ export async function excluirVideo(id: string) {
   const supabase = getAdmin();
   const { error } = await supabase.from('videos').delete().eq('id', id);
   if (error) return { error: 'Erro ao excluir vídeo.' };
+  revalidatePath('/admin/videos');
+  return { success: true };
+}
+
+export async function toggleStatusVideo(id: string) {
+  try { await requireAuth(); } catch { return { error: 'Não autenticado.' }; }
+  if (!isValidUUID(id)) return { error: 'ID inválido.' };
+
+  const supabase = getAdmin();
+
+  const { data: video, error: fetchError } = await supabase
+    .from('videos')
+    .select('status')
+    .eq('id', id)
+    .single();
+
+  if (fetchError || !video) return { error: 'Vídeo não encontrado.' };
+
+  const newStatus = video.status === 'publicado' ? 'rascunho' : 'publicado';
+  const { error } = await supabase.from('videos').update({ status: newStatus }).eq('id', id);
+  if (error) return { error: 'Erro ao atualizar status.' };
   revalidatePath('/admin/videos');
   return { success: true };
 }
@@ -340,6 +382,28 @@ export async function excluirCompromisso(id: string) {
   const supabase = getAdmin();
   const { error } = await supabase.from('agenda').delete().eq('id', id);
   if (error) return { error: 'Erro ao excluir compromisso.' };
+  revalidatePath('/admin/agenda');
+  revalidatePath('/');
+  return { success: true };
+}
+
+export async function toggleStatusCompromisso(id: string) {
+  try { await requireAuth(); } catch { return { error: 'Não autenticado.' }; }
+  if (!isValidUUID(id)) return { error: 'ID inválido.' };
+
+  const supabase = getAdmin();
+
+  const { data: compromisso, error: fetchError } = await supabase
+    .from('agenda')
+    .select('status')
+    .eq('id', id)
+    .single();
+
+  if (fetchError || !compromisso) return { error: 'Compromisso não encontrado.' };
+
+  const newStatus = compromisso.status === 'publicado' ? 'rascunho' : 'publicado';
+  const { error } = await supabase.from('agenda').update({ status: newStatus }).eq('id', id);
+  if (error) return { error: 'Erro ao atualizar status.' };
   revalidatePath('/admin/agenda');
   revalidatePath('/');
   return { success: true };

@@ -69,16 +69,19 @@ export default function ProjetosAdminPage() {
                   <td className="px-6 py-4 text-sm font-medium text-gray-900">{projeto.titulo}</td>
                   <td className="px-6 py-4 text-sm text-gray-500">{projeto.categoria}</td>
                   <td className="px-6 py-4">
-                    <button
-                      onClick={() => handleToggleStatus(projeto.id)}
-                      className={`px-2 inline-flex text-xs font-semibold rounded-full cursor-pointer ${
-                        projeto.status === 'publicado' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
-                      }`}
-                    >
-                      {projeto.status}
-                    </button>
+                    <span className={`px-2 inline-flex text-xs font-semibold rounded-full ${
+                      projeto.status === 'publicado' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
+                    }`}>{projeto.status === 'publicado' ? 'Publicado' : 'Rascunho'}</span>
                   </td>
                   <td className="px-6 py-4 text-right text-sm font-medium">
+                    <button
+                      onClick={() => handleToggleStatus(projeto.id)}
+                      className={`mr-4 text-xs font-semibold ${
+                        projeto.status === 'publicado' ? 'text-yellow-600 hover:text-yellow-900' : 'text-green-600 hover:text-green-900'
+                      }`}
+                    >
+                      {projeto.status === 'publicado' ? 'Ocultar' : 'Publicar'}
+                    </button>
                     <a href={`/admin/projetos/${projeto.id}/edit`} className="text-blue-600 hover:text-blue-900 mr-4">
                       Editar
                     </a>

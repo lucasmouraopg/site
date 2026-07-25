@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { supabase, GaleriaAlbum } from '@/lib/supabase';
-import { excluirAlbum } from '../actions';
+import { excluirAlbum, toggleStatusAlbum } from '../actions';
 
 
 export default function GaleriaPage() {
@@ -27,6 +27,11 @@ export default function GaleriaPage() {
   const handleDelete = async (id: string) => {
     if (!confirm('Tem certeza que deseja excluir este álbum?')) return;
     await excluirAlbum(id);
+    fetchAlbuns();
+  };
+
+  const handleToggleStatus = async (id: string) => {
+    await toggleStatusAlbum(id);
     fetchAlbuns();
   };
 
@@ -67,9 +72,17 @@ export default function GaleriaPage() {
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
                       album.status === 'publicado' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
-                    }`}>{album.status}</span>
+                    }`}>{album.status === 'publicado' ? 'Publicado' : 'Rascunho'}</span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <button
+                      onClick={() => handleToggleStatus(album.id)}
+                      className={`mr-3 text-xs font-semibold ${
+                        album.status === 'publicado' ? 'text-yellow-600 hover:text-yellow-900' : 'text-green-600 hover:text-green-900'
+                      }`}
+                    >
+                      {album.status === 'publicado' ? 'Ocultar' : 'Publicar'}
+                    </button>
                     <a href={`/admin/galeria/${album.id}/fotos`} className="text-green-600 hover:text-green-900 mr-3">
                       Fotos
                     </a>
