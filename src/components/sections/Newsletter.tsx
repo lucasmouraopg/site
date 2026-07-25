@@ -10,7 +10,7 @@ export default function Newsletter() {
 
   return (
     <>
-      <section className="py-12 bg-gradient-to-r from-blue-50 to-gray-50">
+      <section id="newsletter" className="py-12 bg-gradient-to-r from-blue-50 to-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}

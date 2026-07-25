@@ -3,12 +3,13 @@
 import { useState, useEffect } from 'react';
 
 const menuItems = [
-  { label: 'Home', href: '/#home' },
+  { label: 'Início', href: '/#home' },
   { label: 'Biografia', href: '/#biografia' },
   { label: 'Praia Grande', href: '/#praia-grande' },
-  { label: 'Agenda', href: '/#agenda' },
   { label: 'Galeria', href: '/#galeria' },
   { label: 'Redes Sociais', href: '/#redes-sociais' },
+  { label: 'Agenda', href: '/#agenda' },
+  { label: 'Contato', href: '/#newsletter' },
 ];
 
 const socialLinks = [
