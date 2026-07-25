@@ -19,19 +19,25 @@ export default function NovoVideoPage() {
     setLoading(true);
     setErrorMsg('');
 
-    const result = await criarVideo({
-      titulo,
-      descricao,
-      youtube_url: youtubeUrl,
-      categoria,
-      status,
-    });
+    try {
+      const result = await criarVideo({
+        titulo,
+        descricao,
+        youtube_url: youtubeUrl,
+        categoria,
+        status,
+      });
 
-    if (result.error) {
-      setErrorMsg(result.error);
+      if (result?.error) {
+        setErrorMsg(result.error);
+      } else {
+        router.push('/admin/videos');
+        return;
+      }
+    } catch {
+      setErrorMsg('Erro de conexão. Tente novamente.');
+    } finally {
       setLoading(false);
-    } else {
-      router.push('/admin/videos');
     }
   };
 

@@ -40,19 +40,25 @@ export default function EditarVideoPage() {
     setSaving(true);
     setErrorMsg('');
 
-    const result = await editarVideo(id, {
-      titulo,
-      descricao,
-      youtube_url: youtubeUrl,
-      categoria,
-      status,
-    });
+    try {
+      const result = await editarVideo(id, {
+        titulo,
+        descricao,
+        youtube_url: youtubeUrl,
+        categoria,
+        status,
+      });
 
-    if (result.error) {
-      setErrorMsg(result.error);
+      if (result?.error) {
+        setErrorMsg(result.error);
+      } else {
+        router.push('/admin/videos');
+        return;
+      }
+    } catch {
+      setErrorMsg('Erro de conexão. Tente novamente.');
+    } finally {
       setSaving(false);
-    } else {
-      router.push('/admin/videos');
     }
   };
 

@@ -31,21 +31,27 @@ export default function NovoProjetoPage() {
     setLoading(true);
     setErrorMsg('');
 
-    const result = await criarProjeto({
-      titulo,
-      slug,
-      resumo,
-      descricao,
-      categoria,
-      share_text: shareText,
-      status,
-    });
+    try {
+      const result = await criarProjeto({
+        titulo,
+        slug,
+        resumo,
+        descricao,
+        categoria,
+        share_text: shareText,
+        status,
+      });
 
-    if (result.error) {
-      setErrorMsg(result.error);
+      if (result?.error) {
+        setErrorMsg(result.error);
+      } else {
+        router.push('/admin/projetos');
+        return;
+      }
+    } catch {
+      setErrorMsg('Erro de conexão. Tente novamente.');
+    } finally {
       setLoading(false);
-    } else {
-      router.push('/admin/projetos');
     }
   };
 

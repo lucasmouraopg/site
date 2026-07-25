@@ -65,7 +65,7 @@ export async function criarProjeto(formData: {
   share_text: string;
   status: string;
 }) {
-  await requireAuth();
+  try { await requireAuth(); } catch { return { error: 'Não autenticado.' }; }
   const supabase = getAdmin();
 
   const titulo = sanitize(formData.titulo);
@@ -100,7 +100,7 @@ export async function criarProjeto(formData: {
 }
 
 export async function excluirProjeto(id: string) {
-  await requireAuth();
+  try { await requireAuth(); } catch { return { error: 'Não autenticado.' }; }
   if (!isValidUUID(id)) return { error: 'ID inválido.' };
 
   const supabase = getAdmin();
@@ -112,7 +112,7 @@ export async function excluirProjeto(id: string) {
 }
 
 export async function toggleStatusProjeto(id: string) {
-  await requireAuth();
+  try { await requireAuth(); } catch { return { error: 'Não autenticado.' }; }
   if (!isValidUUID(id)) return { error: 'ID inválido.' };
 
   const supabase = getAdmin();
@@ -143,7 +143,7 @@ export async function criarAlbum(formData: {
   categoria: string;
   status: string;
 }) {
-  await requireAuth();
+  try { await requireAuth(); } catch { return { error: 'Não autenticado.' }; }
   const supabase = getAdmin();
 
   const titulo = sanitize(formData.titulo);
@@ -168,7 +168,7 @@ export async function criarAlbum(formData: {
 }
 
 export async function excluirAlbum(id: string) {
-  await requireAuth();
+  try { await requireAuth(); } catch { return { error: 'Não autenticado.' }; }
   if (!isValidUUID(id)) return { error: 'ID inválido.' };
 
   const supabase = getAdmin();
@@ -189,7 +189,7 @@ export async function criarVideo(formData: {
   categoria: string;
   status: string;
 }) {
-  await requireAuth();
+  try { await requireAuth(); } catch { return { error: 'Não autenticado.' }; }
   const supabase = getAdmin();
 
   const titulo = sanitize(formData.titulo);
@@ -216,7 +216,7 @@ export async function criarVideo(formData: {
 }
 
 export async function excluirVideo(id: string) {
-  await requireAuth();
+  try { await requireAuth(); } catch { return { error: 'Não autenticado.' }; }
   if (!isValidUUID(id)) return { error: 'ID inválido.' };
 
   const supabase = getAdmin();
@@ -231,7 +231,7 @@ export async function excluirVideo(id: string) {
 // ============================================
 
 export async function atualizarConfiguracao(id: string, valor: string) {
-  await requireAuth();
+  try { await requireAuth(); } catch { return { error: 'Não autenticado.' }; }
   if (!isValidUUID(id)) return { error: 'ID inválido.' };
 
   const supabase = getAdmin();
@@ -277,7 +277,7 @@ export async function criarLead(formData: {
 }
 
 export async function excluirLead(id: string) {
-  await requireAuth();
+  try { await requireAuth(); } catch { return { error: 'Não autenticado.' }; }
   if (!isValidUUID(id)) return { error: 'ID inválido.' };
 
   const supabase = getAdmin();
@@ -298,7 +298,7 @@ export async function criarCompromisso(formData: {
   local: string;
   status: string;
 }) {
-  await requireAuth();
+  try { await requireAuth(); } catch { return { error: 'Não autenticado.' }; }
   const supabase = getAdmin();
 
   const titulo = sanitize(formData.titulo);
@@ -325,7 +325,7 @@ export async function criarCompromisso(formData: {
 }
 
 export async function excluirCompromisso(id: string) {
-  await requireAuth();
+  try { await requireAuth(); } catch { return { error: 'Não autenticado.' }; }
   if (!isValidUUID(id)) return { error: 'ID inválido.' };
 
   const supabase = getAdmin();
@@ -344,7 +344,7 @@ export async function adicionarFotosAlbum(
   albumId: string,
   fotos: { url: string; legenda?: string }[]
 ) {
-  await requireAuth();
+  try { await requireAuth(); } catch { return { error: 'Não autenticado.' }; }
   if (!isValidUUID(albumId)) return { error: 'ID do álbum inválido.' };
 
   const supabase = getAdmin();
@@ -376,7 +376,7 @@ export async function adicionarFotosAlbum(
 }
 
 export async function excluirFotoAlbum(fotoId: string) {
-  await requireAuth();
+  try { await requireAuth(); } catch { return { error: 'Não autenticado.' }; }
   if (!isValidUUID(fotoId)) return { error: 'ID inválido.' };
 
   const supabase = getAdmin();
@@ -398,7 +398,7 @@ export async function excluirFotoAlbum(fotoId: string) {
 }
 
 export async function atualizarCapaAlbum(albumId: string, coverUrl: string) {
-  await requireAuth();
+  try { await requireAuth(); } catch { return { error: 'Não autenticado.' }; }
   if (!isValidUUID(albumId)) return { error: 'ID inválido.' };
 
   const supabase = getAdmin();
@@ -429,7 +429,7 @@ export async function editarProjeto(
     status: string;
   }
 ) {
-  await requireAuth();
+  try { await requireAuth(); } catch { return { error: 'Não autenticado.' }; }
   if (!isValidUUID(id)) return { error: 'ID inválido.' };
 
   const supabase = getAdmin();
@@ -466,7 +466,7 @@ export async function editarAlbum(
     status: string;
   }
 ) {
-  await requireAuth();
+  try { await requireAuth(); } catch { return { error: 'Não autenticado.' }; }
   if (!isValidUUID(id)) return { error: 'ID inválido.' };
 
   const supabase = getAdmin();
@@ -500,7 +500,7 @@ export async function editarVideo(
     status: string;
   }
 ) {
-  await requireAuth();
+  try { await requireAuth(); } catch { return { error: 'Não autenticado.' }; }
   if (!isValidUUID(id)) return { error: 'ID inválido.' };
 
   const supabase = getAdmin();
@@ -535,7 +535,7 @@ export async function editarCompromisso(
     status: string;
   }
 ) {
-  await requireAuth();
+  try { await requireAuth(); } catch { return { error: 'Não autenticado.' }; }
   if (!isValidUUID(id)) return { error: 'ID inválido.' };
 
   const supabase = getAdmin();

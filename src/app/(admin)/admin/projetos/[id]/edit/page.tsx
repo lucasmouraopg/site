@@ -44,21 +44,27 @@ export default function EditarProjetoPage() {
     setSaving(true);
     setErrorMsg('');
 
-    const result = await editarProjeto(id, {
-      titulo,
-      slug,
-      resumo,
-      descricao,
-      categoria,
-      share_text: shareText,
-      status,
-    });
+    try {
+      const result = await editarProjeto(id, {
+        titulo,
+        slug,
+        resumo,
+        descricao,
+        categoria,
+        share_text: shareText,
+        status,
+      });
 
-    if (result.error) {
-      setErrorMsg(result.error);
+      if (result?.error) {
+        setErrorMsg(result.error);
+      } else {
+        router.push('/admin/projetos');
+        return;
+      }
+    } catch {
+      setErrorMsg('Erro de conexão. Tente novamente.');
+    } finally {
       setSaving(false);
-    } else {
-      router.push('/admin/projetos');
     }
   };
 

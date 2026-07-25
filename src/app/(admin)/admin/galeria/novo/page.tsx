@@ -18,13 +18,18 @@ export default function NovoAlbumPage() {
     setLoading(true);
     setErrorMsg('');
 
-    const result = await criarAlbum({ titulo, descricao, categoria, status });
-
-    if (result.error) {
-      setErrorMsg(result.error);
+    try {
+      const result = await criarAlbum({ titulo, descricao, categoria, status });
+      if (result?.error) {
+        setErrorMsg(result.error);
+      } else {
+        router.push('/admin/galeria');
+        return;
+      }
+    } catch {
+      setErrorMsg('Erro de conexão. Tente novamente.');
+    } finally {
       setLoading(false);
-    } else {
-      router.push('/admin/galeria');
     }
   };
 

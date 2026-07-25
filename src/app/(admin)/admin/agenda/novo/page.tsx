@@ -19,19 +19,25 @@ export default function NovoCompromissoPage() {
     setLoading(true);
     setError('');
 
-    const result = await criarCompromisso({
-      titulo,
-      descricao,
-      data_hora: dataHora,
-      local,
-      status,
-    });
+    try {
+      const result = await criarCompromisso({
+        titulo,
+        descricao,
+        data_hora: dataHora,
+        local,
+        status,
+      });
 
-    if (result?.error) {
-      setError(result.error);
+      if (result?.error) {
+        setError(result.error);
+      } else {
+        router.push('/admin/agenda');
+        return;
+      }
+    } catch {
+      setError('Erro de conexão. Tente novamente.');
+    } finally {
       setLoading(false);
-    } else {
-      router.push('/admin/agenda');
     }
   };
 

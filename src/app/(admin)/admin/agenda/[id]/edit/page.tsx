@@ -51,19 +51,25 @@ export default function EditarCompromissoPage() {
     setSaving(true);
     setError('');
 
-    const result = await editarCompromisso(id, {
-      titulo,
-      descricao,
-      data_hora: new Date(dataHora).toISOString(),
-      local,
-      status,
-    });
+    try {
+      const result = await editarCompromisso(id, {
+        titulo,
+        descricao,
+        data_hora: new Date(dataHora).toISOString(),
+        local,
+        status,
+      });
 
-    if (result?.error) {
-      setError(result.error);
+      if (result?.error) {
+        setError(result.error);
+      } else {
+        router.push('/admin/agenda');
+        return;
+      }
+    } catch {
+      setError('Erro de conexão. Tente novamente.');
+    } finally {
       setSaving(false);
-    } else {
-      router.push('/admin/agenda');
     }
   };
 

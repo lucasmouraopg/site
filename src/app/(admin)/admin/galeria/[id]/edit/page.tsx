@@ -38,13 +38,19 @@ export default function EditarAlbumPage() {
     setSaving(true);
     setErrorMsg('');
 
-    const result = await editarAlbum(id, { titulo, descricao, categoria, status });
+    try {
+      const result = await editarAlbum(id, { titulo, descricao, categoria, status });
 
-    if (result.error) {
-      setErrorMsg(result.error);
+      if (result?.error) {
+        setErrorMsg(result.error);
+      } else {
+        router.push('/admin/galeria');
+        return;
+      }
+    } catch {
+      setErrorMsg('Erro de conexão. Tente novamente.');
+    } finally {
       setSaving(false);
-    } else {
-      router.push('/admin/galeria');
     }
   };
 
