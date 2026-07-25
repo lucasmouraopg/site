@@ -89,6 +89,9 @@ export default function AgendaPage() {
                     }`}>{item.status}</span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <a href={`/admin/agenda/${item.id}/edit`} className="text-blue-600 hover:text-blue-900 mr-4">
+                      Editar
+                    </a>
                     <button onClick={() => handleDelete(item.id)} className="text-red-600 hover:text-red-900">
                       Excluir
                     </button>

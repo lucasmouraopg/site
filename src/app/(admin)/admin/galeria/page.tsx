@@ -70,6 +70,12 @@ export default function GaleriaPage() {
                     }`}>{album.status}</span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <a href={`/admin/galeria/${album.id}/fotos`} className="text-green-600 hover:text-green-900 mr-3">
+                      Fotos
+                    </a>
+                    <a href={`/admin/galeria/${album.id}/edit`} className="text-blue-600 hover:text-blue-900 mr-3">
+                      Editar
+                    </a>
                     <button onClick={() => handleDelete(album.id)} className="text-red-600 hover:text-red-900">
                       Excluir
                     </button>

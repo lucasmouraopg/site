@@ -79,6 +79,9 @@ export default function ProjetosAdminPage() {
                     </button>
                   </td>
                   <td className="px-6 py-4 text-right text-sm font-medium">
+                    <a href={`/admin/projetos/${projeto.id}/edit`} className="text-blue-600 hover:text-blue-900 mr-4">
+                      Editar
+                    </a>
                     <button onClick={() => handleDelete(projeto.id)} className="text-red-600 hover:text-red-900">
                       Excluir
                     </button>

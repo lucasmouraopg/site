@@ -67,6 +67,9 @@ export default function VideosPage() {
                     }`}>{video.status}</span>
                   </td>
                   <td className="px-6 py-4 text-right text-sm font-medium">
+                    <a href={`/admin/videos/${video.id}/edit`} className="text-blue-600 hover:text-blue-900 mr-4">
+                      Editar
+                    </a>
                     <button onClick={() => handleDelete(video.id)} className="text-red-600 hover:text-red-900">
                       Excluir
                     </button>

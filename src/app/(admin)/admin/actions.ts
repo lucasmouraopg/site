@@ -335,3 +335,233 @@ export async function excluirCompromisso(id: string) {
   revalidatePath('/');
   return { success: true };
 }
+
+// ============================================
+// Galeria Fotos
+// ============================================
+
+export async function adicionarFotosAlbum(
+  albumId: string,
+  fotos: { url: string; legenda?: string }[]
+) {
+  await requireAuth();
+  if (!isValidUUID(albumId)) return { error: 'ID do álbum inválido.' };
+
+  const supabase = getAdmin();
+
+  const { data: existing, error: countError } = await supabase
+    .from('galeria_fotos')
+    .select('ordem', { count: 'exact' })
+    .eq('album_id', albumId)
+    .order('ordem', { ascending: false })
+    .limit(1);
+
+  if (countError) return { error: 'Erro ao verificar fotos existentes.' };
+
+  const startOrder = existing && existing.length > 0 ? existing[0].ordem + 1 : 0;
+
+  const rows = fotos.map((foto, i) => ({
+    album_id: albumId,
+    url: foto.url,
+    legenda: foto.legenda ? sanitize(foto.legenda) : null,
+    ordem: startOrder + i,
+  }));
+
+  const { error } = await supabase.from('galeria_fotos').insert(rows);
+  if (error) return { error: 'Erro ao salvar fotos.' };
+
+  revalidatePath(`/admin/galeria/${albumId}/fotos`);
+  revalidatePath('/admin/galeria');
+  return { success: true };
+}
+
+export async function excluirFotoAlbum(fotoId: string) {
+  await requireAuth();
+  if (!isValidUUID(fotoId)) return { error: 'ID inválido.' };
+
+  const supabase = getAdmin();
+
+  const { data: foto, error: fetchError } = await supabase
+    .from('galeria_fotos')
+    .select('album_id')
+    .eq('id', fotoId)
+    .single();
+
+  if (fetchError || !foto) return { error: 'Foto não encontrada.' };
+
+  const { error } = await supabase.from('galeria_fotos').delete().eq('id', fotoId);
+  if (error) return { error: 'Erro ao excluir foto.' };
+
+  revalidatePath(`/admin/galeria/${foto.album_id}/fotos`);
+  revalidatePath('/admin/galeria');
+  return { success: true };
+}
+
+export async function atualizarCapaAlbum(albumId: string, coverUrl: string) {
+  await requireAuth();
+  if (!isValidUUID(albumId)) return { error: 'ID inválido.' };
+
+  const supabase = getAdmin();
+  const { error } = await supabase
+    .from('galeria_albuns')
+    .update({ cover_url: coverUrl })
+    .eq('id', albumId);
+
+  if (error) return { error: 'Erro ao atualizar capa.' };
+  revalidatePath(`/admin/galeria/${albumId}/fotos`);
+  revalidatePath('/admin/galeria');
+  return { success: true };
+}
+
+// ============================================
+// Edição (UPDATE)
+// ============================================
+
+export async function editarProjeto(
+  id: string,
+  formData: {
+    titulo: string;
+    slug: string;
+    resumo: string;
+    descricao: string;
+    categoria: string;
+    share_text: string;
+    status: string;
+  }
+) {
+  await requireAuth();
+  if (!isValidUUID(id)) return { error: 'ID inválido.' };
+
+  const supabase = getAdmin();
+
+  const titulo = sanitize(formData.titulo);
+  const slug = validateSlug(formData.slug || formData.titulo);
+  const resumo = sanitize(formData.resumo);
+  const descricao = sanitize(formData.descricao);
+  const categoria = sanitize(formData.categoria);
+  const share_text = sanitize(formData.share_text);
+  const status = formData.status === 'publicado' ? 'publicado' : 'rascunho';
+
+  if (!titulo || !slug || !categoria) {
+    return { error: 'Campos obrigatórios não preenchidos.' };
+  }
+
+  const { error } = await supabase
+    .from('projetos')
+    .update({ titulo, slug, resumo, descricao, categoria, share_text, status })
+    .eq('id', id);
+
+  if (error) return { error: 'Erro ao atualizar projeto.' };
+  revalidatePath('/admin/projetos');
+  revalidatePath('/');
+  return { success: true };
+}
+
+export async function editarAlbum(
+  id: string,
+  formData: {
+    titulo: string;
+    descricao: string;
+    categoria: string;
+    status: string;
+  }
+) {
+  await requireAuth();
+  if (!isValidUUID(id)) return { error: 'ID inválido.' };
+
+  const supabase = getAdmin();
+
+  const titulo = sanitize(formData.titulo);
+  const descricao = sanitize(formData.descricao);
+  const categoria = sanitize(formData.categoria);
+  const status = formData.status === 'publicado' ? 'publicado' : 'rascunho';
+
+  if (!titulo || !categoria) {
+    return { error: 'Campos obrigatórios não preenchidos.' };
+  }
+
+  const { error } = await supabase
+    .from('galeria_albuns')
+    .update({ titulo, descricao, categoria, status })
+    .eq('id', id);
+
+  if (error) return { error: 'Erro ao atualizar álbum.' };
+  revalidatePath('/admin/galeria');
+  return { success: true };
+}
+
+export async function editarVideo(
+  id: string,
+  formData: {
+    titulo: string;
+    descricao: string;
+    youtube_url: string;
+    categoria: string;
+    status: string;
+  }
+) {
+  await requireAuth();
+  if (!isValidUUID(id)) return { error: 'ID inválido.' };
+
+  const supabase = getAdmin();
+
+  const titulo = sanitize(formData.titulo);
+  const descricao = sanitize(formData.descricao);
+  const youtube_url = formData.youtube_url.trim();
+  const categoria = sanitize(formData.categoria);
+  const status = formData.status === 'publicado' ? 'publicado' : 'rascunho';
+
+  if (!titulo || !categoria || !validateYouTubeUrl(youtube_url)) {
+    return { error: 'Campos obrigatórios inválidos.' };
+  }
+
+  const { error } = await supabase
+    .from('videos')
+    .update({ titulo, descricao, youtube_url, categoria, status })
+    .eq('id', id);
+
+  if (error) return { error: 'Erro ao atualizar vídeo.' };
+  revalidatePath('/admin/videos');
+  return { success: true };
+}
+
+export async function editarCompromisso(
+  id: string,
+  formData: {
+    titulo: string;
+    descricao: string;
+    data_hora: string;
+    local: string;
+    status: string;
+  }
+) {
+  await requireAuth();
+  if (!isValidUUID(id)) return { error: 'ID inválido.' };
+
+  const supabase = getAdmin();
+
+  const titulo = sanitize(formData.titulo);
+  const descricao = sanitize(formData.descricao);
+  const local = sanitize(formData.local);
+  const status = formData.status === 'publicado' ? 'publicado' : 'rascunho';
+
+  if (!titulo || !formData.data_hora) {
+    return { error: 'Título e data/hora são obrigatórios.' };
+  }
+
+  const { error } = await supabase
+    .from('agenda')
+    .update({
+      titulo,
+      descricao: descricao || null,
+      data_hora: formData.data_hora,
+      local: local || null,
+      status,
+    })
+    .eq('id', id);
+
+  if (error) return { error: 'Erro ao atualizar compromisso.' };
+  revalidatePath('/admin/agenda');
+  revalidatePath('/');
+  return { success: true };
+}
