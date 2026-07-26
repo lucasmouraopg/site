@@ -1,6 +1,8 @@
 'use client';
 
+import { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
+import useEmblaCarousel from 'embla-carousel-react';
 import { motion } from 'framer-motion';
 import type { Projeto } from '@/lib/supabase';
 
@@ -9,6 +11,26 @@ interface PraiaGrandeProps {
 }
 
 export default function PraiaGrande({ projetos }: PraiaGrandeProps) {
+  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false, align: 'start' });
+  const [canScrollPrev, setCanScrollPrev] = useState(false);
+  const [canScrollNext, setCanScrollNext] = useState(true);
+
+  const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi]);
+  const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi]);
+
+  const onSelect = useCallback(() => {
+    if (!emblaApi) return;
+    setCanScrollPrev(emblaApi.canScrollPrev());
+    setCanScrollNext(emblaApi.canScrollNext());
+  }, [emblaApi]);
+
+  useEffect(() => {
+    if (!emblaApi) return;
+    emblaApi.on('select', onSelect);
+    emblaApi.on('reInit', onSelect);
+    onSelect();
+  }, [emblaApi, onSelect]);
+
   return (
     <section id="praia-grande" className="py-20 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -28,7 +50,7 @@ export default function PraiaGrande({ projetos }: PraiaGrandeProps) {
           </p>
         </motion.div>
 
-        {/* Projects Grid */}
+        {/* Projects */}
         {projetos.length === 0 ? (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -43,69 +65,130 @@ export default function PraiaGrande({ projetos }: PraiaGrandeProps) {
             <p className="text-gray-500 text-lg">Nenhum projeto publicado no momento.</p>
           </motion.div>
         ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {projetos.map((projeto, index) => (
-            <motion.div
-              key={projeto.slug}
-              className="h-full"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
-            >
-              <Link href={`/projetos/${projeto.slug}`} className="block h-full">
-                <div className="h-full flex flex-col group cursor-pointer bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300">
-                  {/* Image */}
-                  <div className="relative aspect-[4/3] overflow-hidden shrink-0">
-                    <div
-                      className="w-full h-full bg-cover bg-center bg-no-repeat transform group-hover:scale-105 transition-transform duration-500"
-                      style={{
-                        backgroundImage: `url(${projeto.fotos[0]})`,
-                      }}
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-
-                    {/* Category Badge */}
-                    <div className="absolute top-4 left-4">
-                      <span className="px-3 py-1 bg-blue-600 text-white text-xs font-semibold rounded-full">
-                        {projeto.categoria}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Content */}
-                  <div className="p-6 flex flex-col flex-grow">
-                    <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
-                      {projeto.titulo}
-                    </h3>
-                    <p className="text-gray-600 text-sm mb-4">
-                      {projeto.resumo}
-                    </p>
-
-                    {/* CTA - Agora com mt-auto para empurrar pro final */}
-                    <div className="mt-auto flex items-center text-blue-600 font-semibold text-sm">
-                      <span>Saiba mais</span>
-                      <svg
-                        className="w-4 h-4 ml-2 transform group-hover:translate-x-1 transition-transform"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M9 5l7 7-7 7"
+          <>
+            {/* Desktop: grid */}
+            <div className="hidden lg:grid lg:grid-cols-3 gap-8">
+              {projetos.map((projeto, index) => (
+                <motion.div
+                  key={projeto.slug}
+                  className="h-full"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                >
+                  <Link href={`/projetos/${projeto.slug}`} className="block h-full">
+                    <div className="h-full flex flex-col group cursor-pointer bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300">
+                      <div className="relative aspect-[4/3] overflow-hidden shrink-0">
+                        <div
+                          className="w-full h-full bg-cover bg-center bg-no-repeat transform group-hover:scale-105 transition-transform duration-500"
+                          style={{ backgroundImage: `url(${projeto.fotos[0]})` }}
                         />
-                      </svg>
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                        <div className="absolute top-4 left-4">
+                          <span className="px-3 py-1 bg-blue-600 text-white text-xs font-semibold rounded-full">
+                            {projeto.categoria}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="p-6 flex flex-col flex-grow">
+                        <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
+                          {projeto.titulo}
+                        </h3>
+                        <p className="text-gray-600 text-sm mb-4">{projeto.resumo}</p>
+                        <div className="mt-auto flex items-center text-blue-600 font-semibold text-sm">
+                          <span>Saiba mais</span>
+                          <svg className="w-4 h-4 ml-2 transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                          </svg>
+                        </div>
+                      </div>
                     </div>
-                  </div>
+                  </Link>
+                </motion.div>
+              ))}
+            </div>
+
+            {/* Mobile: Embla carousel */}
+            <div className="lg:hidden relative">
+              <div className="overflow-hidden" ref={emblaRef}>
+                <div className="flex gap-4">
+                  {projetos.map((projeto) => (
+                    <Link
+                      key={projeto.slug}
+                      href={`/projetos/${projeto.slug}`}
+                      className="flex-none w-[calc(100%-16px)] group"
+                    >
+                      <div className="h-full flex flex-col bg-white rounded-2xl overflow-hidden shadow-lg">
+                        <div className="relative aspect-[4/3] overflow-hidden shrink-0">
+                          <div
+                            className="w-full h-full bg-cover bg-center bg-no-repeat transform group-hover:scale-105 transition-transform duration-500"
+                            style={{ backgroundImage: `url(${projeto.fotos[0]})` }}
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                          <div className="absolute top-4 left-4">
+                            <span className="px-3 py-1 bg-blue-600 text-white text-xs font-semibold rounded-full">
+                              {projeto.categoria}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="p-6 flex flex-col flex-grow">
+                          <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
+                            {projeto.titulo}
+                          </h3>
+                          <p className="text-gray-600 text-sm mb-4">{projeto.resumo}</p>
+                          <div className="mt-auto flex items-center text-blue-600 font-semibold text-sm">
+                            <span>Saiba mais</span>
+                            <svg className="w-4 h-4 ml-2 transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                            </svg>
+                          </div>
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
                 </div>
-              </Link>
-            </motion.div>
-          ))}
-        </div>
+              </div>
+
+              {projetos.length > 1 && (
+                <>
+                  <button
+                    onClick={scrollPrev}
+                    disabled={!canScrollPrev}
+                    className={`absolute -left-3 top-1/2 -translate-y-1/2 z-20 flex items-center justify-center w-9 h-9 rounded-full bg-white shadow-lg border border-gray-200 transition-all duration-200 hover:bg-white hover:scale-110 ${
+                      !canScrollPrev ? 'opacity-30 cursor-default hover:scale-100' : 'cursor-pointer'
+                    }`}
+                  >
+                    <svg className="w-4 h-4 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                    </svg>
+                  </button>
+                  <button
+                    onClick={scrollNext}
+                    disabled={!canScrollNext}
+                    className={`absolute -right-3 top-1/2 -translate-y-1/2 z-20 flex items-center justify-center w-9 h-9 rounded-full bg-white shadow-lg border border-gray-200 transition-all duration-200 hover:bg-white hover:scale-110 ${
+                      !canScrollNext ? 'opacity-30 cursor-default hover:scale-100' : 'cursor-pointer'
+                    }`}
+                  >
+                    <svg className="w-4 h-4 text-gray-700 rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                    </svg>
+                  </button>
+                </>
+              )}
+            </div>
+          </>
         )}
+
+        {/* CTA Button */}
+        <div className="text-center mt-10">
+          <Link
+            href="/projetos"
+            className="inline-block px-8 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-all duration-300 hover:scale-105 hover:shadow-lg"
+          >
+            Veja todos os projetos
+          </Link>
+        </div>
       </div>
     </section>
   );

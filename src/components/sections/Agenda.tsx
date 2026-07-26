@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
+import Link from 'next/link';
 import useEmblaCarousel from 'embla-carousel-react';
 import { motion } from 'framer-motion';
 import { supabase } from '@/lib/supabase';
@@ -204,6 +205,16 @@ export default function Agenda() {
             </div>
           </>
         )}
+
+        {/* CTA Button */}
+        <div className="text-center mt-10">
+          <Link
+            href="/agenda"
+            className="inline-block px-8 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-all duration-300 hover:scale-105 hover:shadow-lg"
+          >
+            Veja a agenda completa
+          </Link>
+        </div>
       </div>
 
       {/* Modal de detalhes */}
