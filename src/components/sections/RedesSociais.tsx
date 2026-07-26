@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useRef, useCallback } from 'react';
+import { useEffect, useRef, useCallback, useState } from 'react';
+import Link from 'next/link';
 import { motion } from 'framer-motion';
 
 const socialLinks = [
@@ -42,7 +43,7 @@ const socialLinks = [
   },
 ];
 
-const reels = [
+const allReels = [
   'https://www.instagram.com/reel/DbBBoERRstz/',
   'https://www.instagram.com/reel/DbDkxpIxOg0/',
   'https://www.instagram.com/reel/Da8s9YkPYoi/',
@@ -84,6 +85,18 @@ function ensureScriptLoaded(): Promise<void> {
 export default function RedesSociais() {
   const reelsContainerRef = useRef<HTMLDivElement>(null);
   const observerRef = useRef<MutationObserver | null>(null);
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia('(min-width: 768px)');
+    setIsDesktop(mq.matches);
+
+    const handler = (e: MediaQueryListEvent) => setIsDesktop(e.matches);
+    mq.addEventListener('change', handler);
+    return () => mq.removeEventListener('change', handler);
+  }, []);
+
+  const visibleReels = isDesktop ? allReels : [allReels[0]];
 
   const reprocessWithDelay = useCallback(() => {
     requestAnimationFrame(() => {
@@ -115,12 +128,12 @@ export default function RedesSociais() {
     return () => {
       observerRef.current?.disconnect();
     };
-  }, [reprocessWithDelay]);
+  }, [reprocessWithDelay, visibleReels]);
 
   return (
     <section id="redes-sociais" className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* 1. Título */}
+        {/* 1. Titulo */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -133,7 +146,7 @@ export default function RedesSociais() {
           </h2>
         </motion.div>
 
-        {/* 2. Reels */}
+        {/* 2. Reels — only visible reels exist in DOM */}
         <div ref={reelsContainerRef} className="w-full max-w-full overflow-hidden">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -142,8 +155,8 @@ export default function RedesSociais() {
             transition={{ duration: 0.6, delay: 0.1 }}
             className="mb-12"
           >
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {reels.map((url, index) => (
+            <div className={isDesktop ? 'grid grid-cols-3 gap-6' : 'flex justify-center'}>
+              {visibleReels.map((url, index) => (
                 <motion.div
                   key={url}
                   initial={{ opacity: 0, y: 20 }}
@@ -166,6 +179,16 @@ export default function RedesSociais() {
               ))}
             </div>
           </motion.div>
+        </div>
+
+        {/* CTA Button */}
+        <div className="text-center mb-12">
+          <Link
+            href="/redes-sociais"
+            className="inline-block px-8 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-all duration-300 hover:scale-105 hover:shadow-lg"
+          >
+            Veja todos os reels
+          </Link>
         </div>
 
         {/* 3. Headline */}
