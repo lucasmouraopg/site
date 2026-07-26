@@ -47,7 +47,7 @@ export default function Footer() {
     <footer className="relative bg-gray-900 text-white overflow-hidden">
       {/* Background: OG image */}
       <div
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-25"
+        className="absolute inset-0 bg-cover bg-top bg-no-repeat opacity-25"
         style={{
           backgroundImage: 'url(/assets/images/og/og-image.jpg)',
         }}
