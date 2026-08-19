@@ -31,7 +31,8 @@ export default function FotosAlbumPage() {
       .from('galeria_fotos')
       .select('*')
       .eq('album_id', albumId)
-      .order('ordem', { ascending: true });
+      .order('ordem', { ascending: true })
+      .limit(500);
 
     if (fotosData) setFotos(fotosData);
     setLoading(false);

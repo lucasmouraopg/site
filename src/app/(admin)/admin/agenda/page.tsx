@@ -23,7 +23,8 @@ export default function AgendaPage() {
     const { data } = await supabase
       .from('agenda')
       .select('*')
-      .order('data_hora', { ascending: false });
+      .order('data_hora', { ascending: false })
+      .limit(500);
 
     if (data) setCompromissos(data);
     setLoading(false);

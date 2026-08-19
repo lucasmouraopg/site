@@ -4,6 +4,7 @@ import { createServerClient } from '@supabase/ssr';
 import { cookies, headers } from 'next/headers';
 import { createAdminClient } from '@/lib/supabase-admin';
 import { revalidatePath } from 'next/cache';
+import { checkLoginLimit, checkLoginEmailLimit, checkLeadLimit } from '@/lib/rate-limit';
 
 // ============================================
 // Clientes Supabase
@@ -151,7 +152,11 @@ export async function toggleStatusProjeto(id: string) {
   if (fetchError || !projeto) return { error: 'Projeto não encontrado.' };
 
   const newStatus = projeto.status === 'publicado' ? 'rascunho' : 'publicado';
-  const { error } = await supabase.from('projetos').update({ status: newStatus }).eq('id', id);
+  const { error } = await supabase
+    .from('projetos')
+    .update({ status: newStatus })
+    .eq('id', id)
+    .eq('status', projeto.status);
   if (error) return { error: 'Erro ao atualizar status.' };
   revalidatePath('/admin/projetos');
   revalidatePath('/');
@@ -221,7 +226,11 @@ export async function toggleStatusAlbum(id: string) {
   if (fetchError || !album) return { error: 'Álbum não encontrado.' };
 
   const newStatus = album.status === 'publicado' ? 'rascunho' : 'publicado';
-  const { error } = await supabase.from('galeria_albuns').update({ status: newStatus }).eq('id', id);
+  const { error } = await supabase
+    .from('galeria_albuns')
+    .update({ status: newStatus })
+    .eq('id', id)
+    .eq('status', album.status);
   if (error) return { error: 'Erro ao atualizar status.' };
   revalidatePath('/admin/galeria');
   return { success: true };
@@ -299,7 +308,11 @@ export async function toggleStatusVideo(id: string) {
   if (fetchError || !video) return { error: 'Vídeo não encontrado.' };
 
   const newStatus = video.status === 'publicado' ? 'rascunho' : 'publicado';
-  const { error } = await supabase.from('videos').update({ status: newStatus }).eq('id', id);
+  const { error } = await supabase
+    .from('videos')
+    .update({ status: newStatus })
+    .eq('id', id)
+    .eq('status', video.status);
   if (error) return { error: 'Erro ao atualizar status.' };
   revalidatePath('/admin/videos');
   return { success: true };
@@ -323,27 +336,8 @@ export async function atualizarConfiguracao(id: string, valor: string) {
 }
 
 // ============================================
-// Login — Rate Limiting por IP
+// Login — Rate Limiting por IP + Email (Upstash)
 // ============================================
-
-const loginRateLimit = new Map<string, { count: number; resetAt: number }>();
-const LOGIN_MAX_ATTEMPTS = 5;
-const LOGIN_WINDOW_MS = 15 * 60 * 1000; // 15 minutos
-
-function checkLoginRateLimit(ip: string): boolean {
-  const now = Date.now();
-  const entry = loginRateLimit.get(ip);
-
-  if (!entry || now > entry.resetAt) {
-    loginRateLimit.set(ip, { count: 1, resetAt: now + LOGIN_WINDOW_MS });
-    return true;
-  }
-
-  if (entry.count >= LOGIN_MAX_ATTEMPTS) return false;
-
-  entry.count++;
-  return true;
-}
 
 export async function loginAction(email: string, password: string) {
   const hdrs = await headers();
@@ -351,8 +345,14 @@ export async function loginAction(email: string, password: string) {
   const realIp = hdrs.get('x-real-ip');
   const ip = forwarded?.split(',')[0]?.trim() || realIp || 'unknown';
 
-  if (!checkLoginRateLimit(ip)) {
-    return { error: 'Muitas tentativas. Aguarde 15 minutos e tente novamente.' };
+  // Rate limit por IP: 5 tentativas / 15 min
+  if (!(await checkLoginLimit(ip))) {
+    return { error: 'Muitas tentativas deste IP. Aguarde 15 minutos.' };
+  }
+
+  // Rate limit por email (Account Lockout): 10 tentativas / 15 min
+  if (email && !(await checkLoginEmailLimit(email.toLowerCase()))) {
+    return { error: 'Muitas tentativas para esta conta. Aguarde 15 minutos.' };
   }
 
   if (!email || !password) {
@@ -390,29 +390,8 @@ export async function loginAction(email: string, password: string) {
 }
 
 // ============================================
-// Leads (Captação) — Rate Limiting via IP real
+// Leads (Captação) — Rate Limiting via IP (Upstash)
 // ============================================
-
-const leadRateLimit = new Map<string, { count: number; resetAt: number }>();
-const LEAD_MAX_SUBMISSIONS = 3;
-const LEAD_WINDOW_MS = 60 * 60 * 1000; // 1 hora
-
-function checkLeadRateLimit(ip: string): boolean {
-  const now = Date.now();
-  const entry = leadRateLimit.get(ip);
-
-  if (!entry || now > entry.resetAt) {
-    leadRateLimit.set(ip, { count: 1, resetAt: now + LEAD_WINDOW_MS });
-    return true;
-  }
-
-  if (entry.count >= LEAD_MAX_SUBMISSIONS) {
-    return false;
-  }
-
-  entry.count++;
-  return true;
-}
 
 export async function criarLead(formData: {
   nome: string;
@@ -430,7 +409,7 @@ export async function criarLead(formData: {
   const realIp = hdrs.get('x-real-ip');
   const ip = forwarded?.split(',')[0]?.trim() || realIp || 'unknown';
 
-  if (!checkLeadRateLimit(ip)) {
+  if (!(await checkLeadLimit(ip))) {
     return { error: 'Limite de envios atingido. Tente novamente mais tarde.' };
   }
 
@@ -551,7 +530,11 @@ export async function toggleStatusCompromisso(id: string) {
   if (fetchError || !compromisso) return { error: 'Compromisso não encontrado.' };
 
   const newStatus = compromisso.status === 'publicado' ? 'rascunho' : 'publicado';
-  const { error } = await supabase.from('agenda').update({ status: newStatus }).eq('id', id);
+  const { error } = await supabase
+    .from('agenda')
+    .update({ status: newStatus })
+    .eq('id', id)
+    .eq('status', compromisso.status);
   if (error) return { error: 'Erro ao atualizar status.' };
   revalidatePath('/admin/agenda');
   revalidatePath('/');

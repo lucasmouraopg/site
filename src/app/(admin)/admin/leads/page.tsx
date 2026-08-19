@@ -22,7 +22,8 @@ export default function LeadsPage() {
     const { data } = await supabase
       .from('leads')
       .select('*')
-      .order('criado_em', { ascending: false });
+      .order('criado_em', { ascending: false })
+      .limit(500);
 
     if (data) setLeads(data);
     setLoading(false);

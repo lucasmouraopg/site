@@ -134,7 +134,8 @@ export async function getFotosByAlbum(albumId: string) {
     .from('galeria_fotos')
     .select('*')
     .eq('album_id', albumId)
-    .order('ordem', { ascending: true });
+    .order('ordem', { ascending: true })
+    .limit(500);
   return data ?? [];
 }
 
@@ -145,7 +146,8 @@ export async function getVideosByAlbum(albumId: string) {
     .select('*')
     .eq('album_id', albumId)
     .eq('status', 'publicado')
-    .order('ordem', { ascending: true });
+    .order('ordem', { ascending: true })
+    .limit(500);
   return data ?? [];
 }
 

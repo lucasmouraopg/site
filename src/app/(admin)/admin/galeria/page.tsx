@@ -14,7 +14,8 @@ export default function GaleriaPage() {
     const { data } = await supabase
       .from('galeria_albuns')
       .select('*')
-      .order('criado_em', { ascending: false });
+      .order('criado_em', { ascending: false })
+      .limit(500);
 
     if (data) setAlbuns(data);
     setLoading(false);

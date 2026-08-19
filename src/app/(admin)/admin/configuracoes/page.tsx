@@ -14,7 +14,8 @@ export default function ConfiguracoesPage() {
     const { data } = await supabase
       .from('configuracoes')
       .select('*')
-      .order('chave');
+      .order('chave')
+      .limit(500);
 
     if (data) setConfigs(data);
     setLoading(false);

@@ -13,7 +13,8 @@ export default function ProjetosAdminPage() {
     const { data } = await supabase
       .from('projetos')
       .select('*')
-      .order('ordem', { ascending: true });
+      .order('ordem', { ascending: true })
+      .limit(500);
 
     if (data) setProjetos(data);
     setLoading(false);

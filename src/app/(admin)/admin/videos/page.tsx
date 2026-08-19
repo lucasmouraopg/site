@@ -13,7 +13,8 @@ export default function VideosPage() {
     const { data } = await supabase
       .from('videos')
       .select('*')
-      .order('ordem', { ascending: true });
+      .order('ordem', { ascending: true })
+      .limit(500);
 
     if (data) setVideos(data);
     setLoading(false);
