@@ -1,14 +1,13 @@
 'use client';
 
 import { useEffect, useState, useRef } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { supabase, GaleriaAlbum, GaleriaFoto } from '@/lib/supabase';
 import { adicionarFotosAlbum, excluirFotoAlbum, atualizarCapaAlbum } from '../../../actions';
 
 export default function FotosAlbumPage() {
   const params = useParams();
-  const router = useRouter();
   const albumId = params.id as string;
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -18,10 +17,6 @@ export default function FotosAlbumPage() {
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState('');
   const [error, setError] = useState('');
-
-  useEffect(() => {
-    fetchData();
-  }, [albumId]);
 
   const fetchData = async () => {
     const { data: albumData } = await supabase
@@ -41,6 +36,10 @@ export default function FotosAlbumPage() {
     if (fotosData) setFotos(fotosData);
     setLoading(false);
   };
+
+  useEffect(() => {
+    fetchData(); // eslint-disable-line react-hooks/set-state-in-effect
+  }, [albumId]);
 
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -75,8 +74,8 @@ export default function FotosAlbumPage() {
 
       if (fileInputRef.current) fileInputRef.current.value = '';
       await fetchData();
-    } catch (err: any) {
-      setError(err.message || 'Erro ao fazer upload.');
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Erro ao fazer upload.');
     } finally {
       setUploading(false);
       setUploadProgress('');

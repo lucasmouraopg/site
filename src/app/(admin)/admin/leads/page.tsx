@@ -18,10 +18,6 @@ export default function LeadsPage() {
   const [leads, setLeads] = useState<Lead[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetchLeads();
-  }, []);
-
   const fetchLeads = async () => {
     const { data } = await supabase
       .from('leads')
@@ -31,6 +27,10 @@ export default function LeadsPage() {
     if (data) setLeads(data);
     setLoading(false);
   };
+
+  useEffect(() => {
+    fetchLeads(); // eslint-disable-line react-hooks/set-state-in-effect
+  }, []);
 
   const handleDelete = async (id: string) => {
     if (!confirm('Tem certeza que deseja excluir este lead?')) return;

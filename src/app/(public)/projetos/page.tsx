@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { getProjetos, type Projeto } from '@/lib/supabase';
+import { getProjetos, type Projeto } from '@/lib/supabase-server';
 
 export default async function ProjetosPage() {
   let projetos: Projeto[] = [];

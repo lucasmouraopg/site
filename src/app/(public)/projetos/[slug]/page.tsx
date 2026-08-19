@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
-import { getProjetoBySlug, getAllProjetoSlugs } from '@/lib/supabase';
+import { getProjetoBySlug, getAllProjetoSlugs } from '@/lib/supabase-server';
 import ProjetoContent from '@/components/sections/ProjetoContent';
 
 export async function generateStaticParams() {
@@ -36,10 +36,7 @@ export default async function ProjetoPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  try {
-    const projeto = await getProjetoBySlug(slug);
-    return <ProjetoContent projeto={projeto} />;
-  } catch {
-    notFound();
-  }
+  const projeto = await getProjetoBySlug(slug).catch(() => null);
+  if (!projeto) notFound();
+  return <ProjetoContent projeto={projeto} />;
 }

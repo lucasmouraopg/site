@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { supabase, Video } from '@/lib/supabase';
+import { supabase } from '@/lib/supabase';
 import { editarVideo } from '../../../actions';
 
 export default function EditarVideoPage() {

@@ -1,11 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 
 export default function LoginPage() {
-  const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -25,8 +23,8 @@ export default function LoginPage() {
       if (error) throw error;
 
       window.location.href = '/admin';
-    } catch (err: any) {
-      console.error('Erro de login:', err.message);
+    } catch (err: unknown) {
+      console.error('Erro de login:', err instanceof Error ? err.message : err);
       setError('E-mail ou senha inválidos, ou erro de conexão.');
     } finally {
       setLoading(false);

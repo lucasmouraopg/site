@@ -63,7 +63,7 @@ export default function WeatherWidget() {
   }, [weatherList.length]);
 
   useEffect(() => {
-    loadWeather();
+    loadWeather(); // eslint-disable-line react-hooks/set-state-in-effect
     resetTimer();
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);

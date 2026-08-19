@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { supabase, GaleriaAlbum } from '@/lib/supabase';
+import { supabase } from '@/lib/supabase';
 import { editarAlbum } from '../../../actions';
 
 export default function EditarAlbumPage() {

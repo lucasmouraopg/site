@@ -10,10 +10,6 @@ export default function GaleriaPage() {
   const [albuns, setAlbuns] = useState<GaleriaAlbum[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetchAlbuns();
-  }, []);
-
   const fetchAlbuns = async () => {
     const { data } = await supabase
       .from('galeria_albuns')
@@ -23,6 +19,10 @@ export default function GaleriaPage() {
     if (data) setAlbuns(data);
     setLoading(false);
   };
+
+  useEffect(() => {
+    fetchAlbuns(); // eslint-disable-line react-hooks/set-state-in-effect
+  }, []);
 
   const handleDelete = async (id: string) => {
     if (!confirm('Tem certeza que deseja excluir este álbum?')) return;

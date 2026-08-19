@@ -5,56 +5,159 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 const DURATION = 2000;
 
-function WhiteBackground() {
+function WaveLayer({
+  d,
+  fill,
+  opacity,
+  duration,
+  delay,
+  top,
+  rotateX,
+}: {
+  d: string;
+  fill: string;
+  opacity: number;
+  duration: number;
+  delay: number;
+  top: string;
+  rotateX: number;
+}) {
+  return (
+    <motion.div
+      className="absolute"
+      style={{
+        top,
+        left: '-25%',
+        width: '150%',
+        transform: `perspective(500px) rotateX(${rotateX}deg)`,
+        transformOrigin: 'center bottom',
+      }}
+      initial={{ x: '-12%', opacity: 0 }}
+      animate={{ x: ['0%', '-12%', '5%', '-8%', '0%'], opacity }}
+      transition={{
+        x: { duration, repeat: Infinity, ease: 'easeInOut', delay },
+        opacity: { duration: 1.2, delay: 0.1 + delay * 0.15, ease: 'easeOut' },
+      }}
+    >
+      <svg
+        viewBox="0 0 1600 250"
+        preserveAspectRatio="none"
+        className="w-full h-[220px] md:h-[320px] block"
+      >
+        <path d={d} fill={fill} />
+      </svg>
+    </motion.div>
+  );
+}
+
+function FoamParticles() {
+  const particles = [
+    { x: 10, y: 25, size: 5, dur: 4.5, delay: 0 },
+    { x: 22, y: 45, size: 4, dur: 5.2, delay: 0.3 },
+    { x: 35, y: 30, size: 6, dur: 3.8, delay: 0.6 },
+    { x: 48, y: 50, size: 3, dur: 5.0, delay: 0.9 },
+    { x: 60, y: 35, size: 5, dur: 4.2, delay: 0.2 },
+    { x: 73, y: 48, size: 4, dur: 4.8, delay: 0.5 },
+    { x: 85, y: 28, size: 5, dur: 5.5, delay: 0.8 },
+    { x: 15, y: 55, size: 3, dur: 4.0, delay: 1.1 },
+    { x: 40, y: 60, size: 4, dur: 5.8, delay: 0.4 },
+    { x: 65, y: 55, size: 6, dur: 4.4, delay: 0.7 },
+    { x: 78, y: 62, size: 3, dur: 5.1, delay: 1.0 },
+    { x: 92, y: 40, size: 4, dur: 4.6, delay: 0.1 },
+  ];
+
+  return (
+    <>
+      {particles.map((p, i) => (
+        <motion.div
+          key={`foam-${i}`}
+          className="absolute rounded-full bg-white"
+          style={{
+            left: `${p.x}%`,
+            top: `${p.y}%`,
+            width: p.size,
+            height: p.size,
+          }}
+          animate={{
+            y: [0, -15, 0, 10, 0],
+            opacity: [0, 0.7, 0.4, 0.7, 0],
+          }}
+          transition={{
+            duration: p.dur,
+            repeat: Infinity,
+            ease: 'easeInOut',
+            delay: p.delay,
+          }}
+        />
+      ))}
+    </>
+  );
+}
+
+function BeachWaves() {
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      {/* Subtle radial glow */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(59,130,246,0.04)_0%,_transparent_70%)]" />
+      {/* Radial glow — very visible */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(59,130,246,0.10)_0%,_transparent_60%)]" />
 
-      {/* Floating thin lines */}
-      {[...Array(5)].map((_, i) => (
-        <motion.div
-          key={i}
-          className="absolute h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent"
-          style={{
-            width: '130%',
-            left: '-15%',
-            top: `${18 + i * 16}%`,
-            rotate: `${-1.5 + i * 0.6}deg`,
-          }}
-          initial={{ x: '-25%', opacity: 0 }}
-          animate={{ x: '8%', opacity: 0.5 }}
-          transition={{
-            duration: 3.5 + i * 0.5,
-            repeat: Infinity,
-            repeatType: 'reverse',
-            ease: 'easeInOut',
-            delay: i * 0.2,
-          }}
-        />
-      ))}
+      {/* Wave layers — intense, spread across full screen */}
+      <WaveLayer
+        d="M0,0 C200,55 400,5 600,45 C800,85 1000,15 1200,50 C1400,85 1550,25 1600,40 L1600,250 L0,250 Z"
+        fill="rgba(59,130,246,0.12)"
+        opacity={0.8}
+        duration={12}
+        delay={0}
+        top="0%"
+        rotateX={18}
+      />
+      <WaveLayer
+        d="M0,0 C250,65 500,10 750,50 C1000,85 1250,20 1600,45 L1600,250 L0,250 Z"
+        fill="rgba(59,130,246,0.15)"
+        opacity={0.85}
+        duration={10}
+        delay={0.3}
+        top="8%"
+        rotateX={22}
+      />
+      <WaveLayer
+        d="M0,0 C300,70 500,5 750,55 C1000,95 1250,15 1600,60 L1600,250 L0,250 Z"
+        fill="rgba(96,165,250,0.14)"
+        opacity={0.85}
+        duration={8}
+        delay={0.6}
+        top="16%"
+        rotateX={28}
+      />
+      <WaveLayer
+        d="M0,0 C200,40 450,95 700,50 C950,10 1200,85 1600,45 L1600,250 L0,250 Z"
+        fill="rgba(255,255,255,0.12)"
+        opacity={0.9}
+        duration={7}
+        delay={0.9}
+        top="25%"
+        rotateX={32}
+      />
+      <WaveLayer
+        d="M0,0 C300,50 550,105 800,60 C1050,20 1300,90 1600,55 L1600,250 L0,250 Z"
+        fill="rgba(255,255,255,0.18)"
+        opacity={0.9}
+        duration={6}
+        delay={1.2}
+        top="35%"
+        rotateX={36}
+      />
+      <WaveLayer
+        d="M0,0 C250,60 500,115 750,70 C1000,30 1300,100 1600,65 L1600,250 L0,250 Z"
+        fill="rgba(255,255,255,0.22)"
+        opacity={0.95}
+        duration={5}
+        delay={1.5}
+        top="45%"
+        rotateX={40}
+      />
 
-      {/* Floating circles */}
-      {[...Array(4)].map((_, i) => (
-        <motion.div
-          key={`c-${i}`}
-          className="absolute rounded-full border border-gray-100"
-          style={{
-            width: `${70 + i * 50}px`,
-            height: `${70 + i * 50}px`,
-            right: `${8 + i * 16}%`,
-            top: `${22 + i * 10}%`,
-          }}
-          initial={{ scale: 0.8, opacity: 0 }}
-          animate={{ scale: [0.8, 1.05, 0.8], opacity: [0, 0.25, 0] }}
-          transition={{
-            duration: 4 + i,
-            repeat: Infinity,
-            ease: 'easeInOut',
-            delay: i * 0.7,
-          }}
-        />
-      ))}
+      {/* Foam particles */}
+      <FoamParticles />
     </div>
   );
 }
@@ -91,7 +194,7 @@ export default function LoadingScreen() {
           transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
           className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-white"
         >
-          <WhiteBackground />
+          <BeachWaves />
 
           {/* Logo */}
           <motion.div

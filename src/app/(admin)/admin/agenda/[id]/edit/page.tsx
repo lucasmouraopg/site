@@ -6,15 +6,6 @@ import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import { editarCompromisso } from '../../../actions';
 
-interface Compromisso {
-  id: string;
-  titulo: string;
-  descricao: string | null;
-  data_hora: string;
-  local: string | null;
-  status: string;
-}
-
 export default function EditarCompromissoPage() {
   const params = useParams();
   const router = useRouter();

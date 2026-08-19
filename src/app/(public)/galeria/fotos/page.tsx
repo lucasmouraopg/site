@@ -1,19 +1,13 @@
 import Link from 'next/link';
-import { supabase } from '@/lib/supabase';
-import type { GaleriaFoto } from '@/lib/supabase';
+import { getAllFotos } from '@/lib/supabase-server';
+import type { GaleriaFoto } from '@/lib/supabase-server';
 import FotosGrid from './FotosGrid';
 
 export default async function FotosPage() {
   let fotos: GaleriaFoto[] = [];
 
   try {
-    const { data } = await supabase
-      .from('galeria_fotos')
-      .select('*')
-      .order('criado_em', { ascending: false })
-      .limit(200);
-
-    fotos = data || [];
+    fotos = await getAllFotos();
   } catch {
     fotos = [];
   }

@@ -1,6 +1,6 @@
 import Link from 'next/link';
-import { supabase } from '@/lib/supabase';
-import type { GaleriaAlbum, GaleriaFoto, Video } from '@/lib/supabase';
+import { getAlbumById, getFotosByAlbum, getVideosByAlbum } from '@/lib/supabase-server';
+import type { GaleriaAlbum, GaleriaFoto, Video } from '@/lib/supabase-server';
 import AlbumDetail from './AlbumDetail';
 
 interface PageProps {
@@ -15,30 +15,11 @@ export default async function AlbumPage({ params }: PageProps) {
   let videos: Video[] = [];
 
   try {
-    const { data: albumData } = await supabase
-      .from('galeria_albuns')
-      .select('*')
-      .eq('id', slug)
-      .single();
-
-    album = albumData;
+    album = await getAlbumById(slug);
 
     if (album) {
-      const { data: fotosData } = await supabase
-        .from('galeria_fotos')
-        .select('*')
-        .eq('album_id', album.id)
-        .order('ordem', { ascending: true });
-
-      fotos = fotosData || [];
-
-      const { data: videosData } = await supabase
-        .from('videos')
-        .select('*')
-        .eq('status', 'publicado')
-        .order('ordem', { ascending: true });
-
-      videos = videosData || [];
+      fotos = await getFotosByAlbum(album.id);
+      videos = await getVideosByAlbum(album.id);
     }
   } catch {
     // album not found

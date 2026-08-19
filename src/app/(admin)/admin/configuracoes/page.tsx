@@ -10,10 +10,6 @@ export default function ConfiguracoesPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
-  useEffect(() => {
-    fetchConfigs();
-  }, []);
-
   const fetchConfigs = async () => {
     const { data } = await supabase
       .from('configuracoes')
@@ -23,6 +19,10 @@ export default function ConfiguracoesPage() {
     if (data) setConfigs(data);
     setLoading(false);
   };
+
+  useEffect(() => {
+    fetchConfigs(); // eslint-disable-line react-hooks/set-state-in-effect
+  }, []);
 
   const handleUpdate = async (id: string, valor: string) => {
     setSaving(true);

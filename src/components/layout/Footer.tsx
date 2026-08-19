@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { motion } from 'framer-motion';
 import WeatherWidget from '@/components/ui/WeatherWidget';
 
 const socialLinks = [
@@ -45,23 +46,68 @@ const socialLinks = [
 export default function Footer() {
   return (
     <footer className="relative bg-gray-900 text-white overflow-hidden">
-      {/* Background: OG image */}
-      <div
-        className="absolute inset-0 bg-cover bg-top bg-no-repeat opacity-25"
-        style={{
-          backgroundImage: 'url(/assets/images/og/og-image.jpg)',
-        }}
-      />
-      <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/90 to-gray-900/70" />
+      {/* Background: Animated waves */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <motion.div
+          className="absolute"
+          style={{ bottom: '-5%', left: '-25%', width: '150%', transform: 'perspective(500px) rotateX(28deg)', transformOrigin: 'center bottom' }}
+          initial={{ x: '-6%', opacity: 0 }}
+          animate={{ x: ['0%', '-6%', '3%', '-4%', '0%'], opacity: 0.7 }}
+          transition={{ x: { duration: 16, repeat: Infinity, ease: 'easeInOut' }, opacity: { duration: 1.5, ease: 'easeOut' } }}
+        >
+          <svg viewBox="0 0 1600 200" preserveAspectRatio="none" className="w-full h-[140px] md:h-[200px] block">
+            <path d="M0,0 C200,60 400,5 600,45 C800,85 1000,15 1200,55 C1400,90 1550,30 1600,50 L1600,200 L0,200 Z" fill="rgba(59,130,246,0.10)" />
+          </svg>
+        </motion.div>
+        <motion.div
+          className="absolute"
+          style={{ bottom: '-10%', left: '-25%', width: '150%', transform: 'perspective(500px) rotateX(34deg)', transformOrigin: 'center bottom' }}
+          initial={{ x: '-6%', opacity: 0 }}
+          animate={{ x: ['0%', '-6%', '3%', '-4%', '0%'], opacity: 0.8 }}
+          transition={{ x: { duration: 12, repeat: Infinity, ease: 'easeInOut', delay: 0.4 }, opacity: { duration: 1.5, delay: 0.2, ease: 'easeOut' } }}
+        >
+          <svg viewBox="0 0 1600 200" preserveAspectRatio="none" className="w-full h-[120px] md:h-[180px] block">
+            <path d="M0,0 C250,65 500,10 750,50 C1000,85 1250,20 1600,55 L1600,200 L0,200 Z" fill="rgba(96,165,250,0.09)" />
+          </svg>
+        </motion.div>
+        <motion.div
+          className="absolute"
+          style={{ bottom: '-15%', left: '-25%', width: '150%', transform: 'perspective(500px) rotateX(40deg)', transformOrigin: 'center bottom' }}
+          initial={{ x: '-6%', opacity: 0 }}
+          animate={{ x: ['0%', '-6%', '3%', '-4%', '0%'], opacity: 0.85 }}
+          transition={{ x: { duration: 9, repeat: Infinity, ease: 'easeInOut', delay: 0.8 }, opacity: { duration: 1.5, delay: 0.4, ease: 'easeOut' } }}
+        >
+          <svg viewBox="0 0 1600 200" preserveAspectRatio="none" className="w-full h-[100px] md:h-[160px] block">
+            <path d="M0,0 C300,50 600,105 900,60 C1100,30 1350,90 1600,70 L1600,200 L0,200 Z" fill="rgba(255,255,255,0.07)" />
+          </svg>
+        </motion.div>
+
+        {/* Foam particles */}
+        {[
+          { x: 10, y: 72, s: 4, d: 5.0, dl: 0 },
+          { x: 25, y: 78, s: 3, d: 4.5, dl: 0.4 },
+          { x: 42, y: 70, s: 4, d: 5.5, dl: 0.8 },
+          { x: 58, y: 76, s: 3, d: 4.2, dl: 0.2 },
+          { x: 72, y: 73, s: 4, d: 5.2, dl: 0.6 },
+          { x: 88, y: 77, s: 3, d: 4.8, dl: 1.0 },
+        ].map((p, i) => (
+          <motion.div
+            key={`footer-foam-${i}`}
+            className="absolute rounded-full bg-white"
+            style={{ left: `${p.x}%`, top: `${p.y}%`, width: p.s, height: p.s }}
+            animate={{ y: [0, -10, 0, 6, 0], opacity: [0, 0.5, 0.3, 0.5, 0] }}
+            transition={{ duration: p.d, repeat: Infinity, ease: 'easeInOut', delay: p.dl }}
+          />
+        ))}
+      </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* Main content: Social + Weather */}
-        {/* Adicionados: md:flex-row md:justify-between md:items-center text-center md:text-left */}
-        <div className="py-12 border-b border-gray-800 flex flex-col md:flex-row items-center md:items-center justify-between text-center md:text-left gap-8">
+        {/* Main content: Social (left) | Logo (center) | Weather (right) */}
+        <div className="py-12 border-b border-gray-800 flex flex-col md:flex-row items-center justify-between gap-8">
           
-          {/* Lado Esquerdo no Desktop: Redes + Botão */}
-          <div>
+          {/* Lado Esquerdo: Redes + Botão */}
+          <div className="text-center md:text-left">
             <h4 className="text-lg font-semibold mb-4">Redes Sociais</h4>
             <div className="flex flex-wrap justify-center md:justify-start gap-3">
               {socialLinks.map((link) => (
@@ -86,8 +132,18 @@ export default function Footer() {
             </a>
           </div>
 
-          {/* Lado Direito no Desktop: Clima ao Vivo */}
-          <div className="flex justify-center w-full md:w-auto">
+          {/* Centro: Logo */}
+          <div className="flex justify-center shrink-0">
+            <img
+              src="/assets/images/logo/logo-lucas.png"
+              alt="Lucas Mourão"
+              className="h-auto"
+              style={{ width: '120px', transform: 'scale(1.5)' }}
+            />
+          </div>
+
+          {/* Lado Direito: Clima ao Vivo */}
+          <div className="flex justify-center md:justify-end w-full md:w-auto">
             <WeatherWidget />
           </div>
 

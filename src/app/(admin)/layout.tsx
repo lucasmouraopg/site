@@ -15,10 +15,6 @@ export default function AdminRootLayout({
   const [loading, setLoading] = useState(true);
   const [authenticated, setAuthenticated] = useState(false);
 
-  if (pathname === '/admin/login') {
-    return <div className="min-h-screen bg-gray-50">{children}</div>;
-  }
-
   useEffect(() => {
     const checkAuth = async () => {
       const { data: { session } } = await supabase.auth.getSession();
@@ -31,6 +27,10 @@ export default function AdminRootLayout({
     };
     checkAuth();
   }, [router]);
+
+  if (pathname === '/admin/login') {
+    return <div className="min-h-screen bg-gray-50">{children}</div>;
+  }
 
   const handleLogout = async () => {
     await supabase.auth.signOut();

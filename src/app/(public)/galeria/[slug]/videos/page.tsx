@@ -1,6 +1,6 @@
 import Link from 'next/link';
-import { supabase } from '@/lib/supabase';
-import type { GaleriaAlbum, Video } from '@/lib/supabase';
+import { getAlbumById, getVideosByAlbum } from '@/lib/supabase-server';
+import type { GaleriaAlbum, Video } from '@/lib/supabase-server';
 import VideosGrid from '@/app/(public)/galeria/videos/VideosGrid';
 
 interface PageProps {
@@ -14,22 +14,10 @@ export default async function AlbumVideosPage({ params }: PageProps) {
   let videos: Video[] = [];
 
   try {
-    const { data: albumData } = await supabase
-      .from('galeria_albuns')
-      .select('*')
-      .eq('id', slug)
-      .single();
-
-    album = albumData;
+    album = await getAlbumById(slug);
 
     if (album) {
-      const { data } = await supabase
-        .from('videos')
-        .select('*')
-        .eq('status', 'publicado')
-        .order('ordem', { ascending: true });
-
-      videos = data || [];
+      videos = await getVideosByAlbum(album.id);
     }
   } catch {
     // not found

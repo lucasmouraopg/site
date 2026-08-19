@@ -9,10 +9,6 @@ export default function VideosPage() {
   const [videos, setVideos] = useState<Video[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetchVideos();
-  }, []);
-
   const fetchVideos = async () => {
     const { data } = await supabase
       .from('videos')
@@ -22,6 +18,10 @@ export default function VideosPage() {
     if (data) setVideos(data);
     setLoading(false);
   };
+
+  useEffect(() => {
+    fetchVideos(); // eslint-disable-line react-hooks/set-state-in-effect
+  }, []);
 
   const handleDelete = async (id: string) => {
     if (!confirm('Tem certeza que deseja excluir este vídeo?')) return;

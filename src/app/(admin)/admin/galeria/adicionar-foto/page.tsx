@@ -64,8 +64,8 @@ export default function AdicionarFotoPage() {
 
       if (fileInputRef.current) fileInputRef.current.value = '';
       setSuccess(`${files.length} foto(s) adicionada(s) com sucesso!`);
-    } catch (err: any) {
-      setError(err.message || 'Erro ao fazer upload.');
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Erro ao fazer upload.');
     } finally {
       setUploading(false);
       setUploadProgress('');

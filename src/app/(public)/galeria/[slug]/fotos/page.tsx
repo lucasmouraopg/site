@@ -1,6 +1,6 @@
 import Link from 'next/link';
-import { supabase } from '@/lib/supabase';
-import type { GaleriaAlbum, GaleriaFoto } from '@/lib/supabase';
+import { getAlbumById, getFotosByAlbum } from '@/lib/supabase-server';
+import type { GaleriaAlbum, GaleriaFoto } from '@/lib/supabase-server';
 import FotosGrid from '@/app/(public)/galeria/fotos/FotosGrid';
 
 interface PageProps {
@@ -14,22 +14,10 @@ export default async function AlbumFotosPage({ params }: PageProps) {
   let fotos: GaleriaFoto[] = [];
 
   try {
-    const { data: albumData } = await supabase
-      .from('galeria_albuns')
-      .select('*')
-      .eq('id', slug)
-      .single();
-
-    album = albumData;
+    album = await getAlbumById(slug);
 
     if (album) {
-      const { data } = await supabase
-        .from('galeria_fotos')
-        .select('*')
-        .eq('album_id', album.id)
-        .order('ordem', { ascending: true });
-
-      fotos = data || [];
+      fotos = await getFotosByAlbum(album.id);
     }
   } catch {
     // not found

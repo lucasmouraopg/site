@@ -28,7 +28,7 @@ export default function PraiaGrande({ projetos }: PraiaGrandeProps) {
     if (!emblaApi) return;
     emblaApi.on('select', onSelect);
     emblaApi.on('reInit', onSelect);
-    onSelect();
+    onSelect(); // eslint-disable-line react-hooks/set-state-in-effect
   }, [emblaApi, onSelect]);
 
   return (

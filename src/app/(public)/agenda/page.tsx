@@ -1,14 +1,5 @@
 import Link from 'next/link';
-import { supabase } from '@/lib/supabase';
-
-interface Compromisso {
-  id: string;
-  titulo: string;
-  descricao: string | null;
-  data_hora: string;
-  local: string | null;
-  status: string;
-}
+import { getCompromissos } from '@/lib/supabase-server';
 
 function formatDateTime(dateStr: string) {
   return new Date(dateStr).toLocaleDateString('pt-BR', {
@@ -19,17 +10,6 @@ function formatDateTime(dateStr: string) {
     hour: '2-digit',
     minute: '2-digit',
   });
-}
-
-async function getCompromissos(): Promise<Compromisso[]> {
-  const { data } = await supabase
-    .from('agenda')
-    .select('id, titulo, descricao, data_hora, local, status')
-    .eq('status', 'publicado')
-    .order('data_hora', { ascending: true })
-    .limit(50);
-
-  return data ?? [];
 }
 
 export default async function AgendaPage() {

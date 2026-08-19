@@ -25,7 +25,7 @@ export default function Hero() {
         {/* MOBILE: full image, no overlay */}
         <div className="md:hidden w-full">
           <img
-            src="/assets/images/hero/hero-mobile.PNG"
+            src="/assets/images/hero/hero-mobile.png"
             alt="Lucas Mourão"
             className="w-full h-auto block"
           />

@@ -19,10 +19,6 @@ export default function AgendaPage() {
   const [compromissos, setCompromissos] = useState<Compromisso[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetchCompromissos();
-  }, []);
-
   const fetchCompromissos = async () => {
     const { data } = await supabase
       .from('agenda')
@@ -32,6 +28,10 @@ export default function AgendaPage() {
     if (data) setCompromissos(data);
     setLoading(false);
   };
+
+  useEffect(() => {
+    fetchCompromissos(); // eslint-disable-line react-hooks/set-state-in-effect
+  }, []);
 
   const handleDelete = async (id: string) => {
     if (!confirm('Tem certeza que deseja excluir este compromisso?')) return;

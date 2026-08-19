@@ -9,10 +9,6 @@ export default function ProjetosAdminPage() {
   const [projetos, setProjetos] = useState<Projeto[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetchProjetos();
-  }, []);
-
   const fetchProjetos = async () => {
     const { data } = await supabase
       .from('projetos')
@@ -22,6 +18,10 @@ export default function ProjetosAdminPage() {
     if (data) setProjetos(data);
     setLoading(false);
   };
+
+  useEffect(() => {
+    fetchProjetos(); // eslint-disable-line react-hooks/set-state-in-effect
+  }, []);
 
   const handleDelete = async (id: string) => {
     if (!confirm('Tem certeza que deseja excluir este projeto?')) return;

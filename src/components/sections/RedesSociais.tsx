@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useCallback, useState } from 'react';
+import { useEffect, useRef, useCallback, useState, useMemo } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 
@@ -89,14 +89,14 @@ export default function RedesSociais() {
 
   useEffect(() => {
     const mq = window.matchMedia('(min-width: 768px)');
-    setIsDesktop(mq.matches);
+    setIsDesktop(mq.matches); // eslint-disable-line react-hooks/set-state-in-effect
 
     const handler = (e: MediaQueryListEvent) => setIsDesktop(e.matches);
     mq.addEventListener('change', handler);
     return () => mq.removeEventListener('change', handler);
   }, []);
 
-  const visibleReels = isDesktop ? allReels : [allReels[0]];
+  const visibleReels = useMemo(() => isDesktop ? allReels : [allReels[0]], [isDesktop]);
 
   const reprocessWithDelay = useCallback(() => {
     requestAnimationFrame(() => {

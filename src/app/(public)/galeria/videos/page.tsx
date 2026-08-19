@@ -1,20 +1,13 @@
 import Link from 'next/link';
-import { supabase } from '@/lib/supabase';
-import type { Video } from '@/lib/supabase';
+import { getAllVideos } from '@/lib/supabase-server';
+import type { Video } from '@/lib/supabase-server';
 import VideosGrid from './VideosGrid';
 
 export default async function VideosPage() {
   let videos: Video[] = [];
 
   try {
-    const { data } = await supabase
-      .from('videos')
-      .select('*')
-      .eq('status', 'publicado')
-      .order('ordem', { ascending: true })
-      .limit(100);
-
-    videos = data || [];
+    videos = await getAllVideos();
   } catch {
     videos = [];
   }

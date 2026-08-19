@@ -75,7 +75,7 @@ export default function Header() {
   const scrollToSection = (href: string) => {
     setIsDrawerOpen(false);
     if (href.startsWith('/')) {
-      window.location.href = href;
+      window.location.href = href; // eslint-disable-line react-hooks/immutability
       return;
     }
     const selector = href.replace(/^\//, '');

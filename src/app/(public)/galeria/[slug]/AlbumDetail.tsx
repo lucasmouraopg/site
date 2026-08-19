@@ -55,14 +55,14 @@ export default function AlbumDetail({ albumId, fotos, videos }: Props) {
     if (!fotosApi) return;
     fotosApi.on('select', onSelectFotos);
     fotosApi.on('reInit', onSelectFotos);
-    onSelectFotos();
+    onSelectFotos(); // eslint-disable-line react-hooks/set-state-in-effect
   }, [fotosApi, onSelectFotos]);
 
   useEffect(() => {
     if (!videosApi) return;
     videosApi.on('select', onSelectVideos);
     videosApi.on('reInit', onSelectVideos);
-    onSelectVideos();
+    onSelectVideos(); // eslint-disable-line react-hooks/set-state-in-effect
   }, [videosApi, onSelectVideos]);
 
   if (fotos.length === 0 && videos.length === 0) {
