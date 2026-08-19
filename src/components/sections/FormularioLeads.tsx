@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { criarLead } from '@/app/(admin)/admin/actions';
 
 export default function FormularioLeads() {
@@ -9,6 +10,7 @@ export default function FormularioLeads() {
   const [email, setEmail] = useState('');
   const [bairro, setBairro] = useState('');
   const [cidade, setCidade] = useState('');
+  const [consent, setConsent] = useState(false);
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [message, setMessage] = useState('');
 
@@ -16,7 +18,16 @@ export default function FormularioLeads() {
     e.preventDefault();
     setStatus('loading');
 
-    const result = await criarLead({ nome, whatsapp, email, bairro, cidade });
+    const result = await criarLead({
+      nome,
+      whatsapp,
+      email,
+      bairro,
+      cidade,
+      consent: consent ? 'true' : '',
+      _website: '',
+      _phone: '',
+    });
 
     if (result?.error) {
       setStatus('error');
@@ -29,6 +40,7 @@ export default function FormularioLeads() {
       setEmail('');
       setBairro('');
       setCidade('');
+      setConsent(false);
     }
   };
 
@@ -120,6 +132,48 @@ export default function FormularioLeads() {
               placeholder="Sua cidade"
             />
           </div>
+        </div>
+
+        {/* Honeypot — invisivel para humanos, preenchido por bots */}
+        <div className="absolute left-[-9999px]" aria-hidden="true">
+          <label htmlFor="_website">Site</label>
+          <input
+            type="text"
+            id="_website"
+            name="_website"
+            tabIndex={-1}
+            autoComplete="off"
+            value=""
+            onChange={() => {}}
+          />
+          <label htmlFor="_phone">Telefone</label>
+          <input
+            type="text"
+            id="_phone"
+            name="_phone"
+            tabIndex={-1}
+            autoComplete="off"
+            value=""
+            onChange={() => {}}
+          />
+        </div>
+
+        {/* Consentimento LGPD */}
+        <div className="flex items-start gap-3">
+          <input
+            type="checkbox"
+            id="consent"
+            checked={consent}
+            onChange={(e) => setConsent(e.target.checked)}
+            className="mt-1 h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+          />
+          <label htmlFor="consent" className="text-xs text-gray-600 leading-relaxed">
+            Concordo com a{' '}
+            <Link href="/privacidade" target="_blank" className="text-blue-600 hover:underline">
+              Politica de Privacidade
+            </Link>{' '}
+            e aceito receber comunicacoes sobre projetos e atividades de Lucas Mourao.
+          </label>
         </div>
 
         <button

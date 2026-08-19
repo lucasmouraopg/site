@@ -1,52 +1,34 @@
-'use client';
-
-import { useEffect, useState } from 'react';
-import { useRouter, usePathname } from 'next/navigation';
+import { redirect } from 'next/navigation';
 import Link from 'next/link';
-import { supabase } from '@/lib/supabase';
+import { createServerClient } from '@supabase/ssr';
+import { cookies } from 'next/headers';
+import LogoutButton from './admin/LogoutButton';
 
-export default function AdminRootLayout({
+export default async function AdminRootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const router = useRouter();
-  const pathname = usePathname();
-  const [loading, setLoading] = useState(true);
-  const [authenticated, setAuthenticated] = useState(false);
+  const cookieStore = await cookies();
 
-  useEffect(() => {
-    const checkAuth = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        router.push('/admin/login');
-      } else {
-        setAuthenticated(true);
-      }
-      setLoading(false);
-    };
-    checkAuth();
-  }, [router]);
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        get(name: string) {
+          return cookieStore.get(name)?.value;
+        },
+        set() {},
+        remove() {},
+      },
+    }
+  );
 
-  if (pathname === '/admin/login') {
-    return <div className="min-h-screen bg-gray-50">{children}</div>;
-  }
+  const { data: { user } } = await supabase.auth.getUser();
 
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
-    router.push('/admin/login');
-  };
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-        <div className="text-gray-500">Carregando...</div>
-      </div>
-    );
-  }
-
-  if (!authenticated) {
-    return null;
+  if (!user) {
+    redirect('/admin/login');
   }
 
   return (
@@ -78,7 +60,7 @@ export default function AdminRootLayout({
                   href="/admin/videos"
                   className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-500 hover:text-gray-700"
                 >
-                  Vídeos
+                  Videos
                 </Link>
                 <Link
                   href="/admin/leads"
@@ -96,17 +78,12 @@ export default function AdminRootLayout({
                   href="/admin/configuracoes"
                   className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-500 hover:text-gray-700"
                 >
-                  Configurações
+                  Configuracoes
                 </Link>
               </div>
             </div>
             <div className="flex items-center">
-              <button
-                onClick={handleLogout}
-                className="text-sm text-gray-500 hover:text-gray-700"
-              >
-                Sair
-              </button>
+              <LogoutButton />
             </div>
           </div>
         </div>

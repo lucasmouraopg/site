@@ -1,9 +1,13 @@
 'use server';
 
 import { createServerClient } from '@supabase/ssr';
-import { cookies } from 'next/headers';
+import { cookies, headers } from 'next/headers';
 import { createAdminClient } from '@/lib/supabase-admin';
 import { revalidatePath } from 'next/cache';
+
+// ============================================
+// Clientes Supabase
+// ============================================
 
 function getAdmin() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -12,27 +16,36 @@ function getAdmin() {
   return createAdminClient();
 }
 
-async function requireAuth() {
+async function getClient() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
   if (!url || !anonKey) throw new Error('Supabase not configured');
 
   const cookieStore = await cookies();
 
-  const supabase = createServerClient(url, anonKey, {
+  return createServerClient(url, anonKey, {
     cookies: {
       get(name: string) {
         return cookieStore.get(name)?.value;
       },
+      set() {},
+      remove() {},
     },
   });
+}
 
-  const { data: { user }, error } = await supabase.auth.getUser();
+async function requireAuth() {
+  const client = await getClient();
+  const { data: { user }, error } = await client.auth.getUser();
   if (error || !user) {
     throw new Error('Não autenticado');
   }
-  return user;
+  return { user, client };
 }
+
+// ============================================
+// Helpers
+// ============================================
 
 function sanitize(value: string): string {
   return value.replace(/[<>]/g, '').trim().slice(0, 5000);
@@ -74,8 +87,9 @@ export async function criarProjeto(formData: {
   share_text: string;
   status: string;
 }) {
-  try { await requireAuth(); } catch { return { error: 'Não autenticado.' }; }
-  const supabase = getAdmin();
+  const auth = await requireAuth().catch(() => null);
+  if (!auth) return { error: 'Não autenticado.' };
+  const supabase = auth.client;
 
   const titulo = sanitize(formData.titulo);
   const slug = validateSlug(formData.slug || formData.titulo);
@@ -109,10 +123,11 @@ export async function criarProjeto(formData: {
 }
 
 export async function excluirProjeto(id: string) {
-  try { await requireAuth(); } catch { return { error: 'Não autenticado.' }; }
+  const auth = await requireAuth().catch(() => null);
+  if (!auth) return { error: 'Não autenticado.' };
   if (!isValidUUID(id)) return { error: 'ID inválido.' };
 
-  const supabase = getAdmin();
+  const supabase = auth.client;
   const { error } = await supabase.from('projetos').delete().eq('id', id);
   if (error) return { error: 'Erro ao excluir projeto.' };
   revalidatePath('/admin/projetos');
@@ -121,10 +136,11 @@ export async function excluirProjeto(id: string) {
 }
 
 export async function toggleStatusProjeto(id: string) {
-  try { await requireAuth(); } catch { return { error: 'Não autenticado.' }; }
+  const auth = await requireAuth().catch(() => null);
+  if (!auth) return { error: 'Não autenticado.' };
   if (!isValidUUID(id)) return { error: 'ID inválido.' };
 
-  const supabase = getAdmin();
+  const supabase = auth.client;
 
   const { data: projeto, error: fetchError } = await supabase
     .from('projetos')
@@ -152,8 +168,9 @@ export async function criarAlbum(formData: {
   categoria: string;
   status: string;
 }) {
-  try { await requireAuth(); } catch { return { error: 'Não autenticado.' }; }
-  const supabase = getAdmin();
+  const auth = await requireAuth().catch(() => null);
+  if (!auth) return { error: 'Não autenticado.' };
+  const supabase = auth.client;
 
   const titulo = sanitize(formData.titulo);
   const descricao = sanitize(formData.descricao);
@@ -177,10 +194,11 @@ export async function criarAlbum(formData: {
 }
 
 export async function excluirAlbum(id: string) {
-  try { await requireAuth(); } catch { return { error: 'Não autenticado.' }; }
+  const auth = await requireAuth().catch(() => null);
+  if (!auth) return { error: 'Não autenticado.' };
   if (!isValidUUID(id)) return { error: 'ID inválido.' };
 
-  const supabase = getAdmin();
+  const supabase = auth.client;
   const { error } = await supabase.from('galeria_albuns').delete().eq('id', id);
   if (error) return { error: 'Erro ao excluir álbum.' };
   revalidatePath('/admin/galeria');
@@ -188,10 +206,11 @@ export async function excluirAlbum(id: string) {
 }
 
 export async function toggleStatusAlbum(id: string) {
-  try { await requireAuth(); } catch { return { error: 'Não autenticado.' }; }
+  const auth = await requireAuth().catch(() => null);
+  if (!auth) return { error: 'Não autenticado.' };
   if (!isValidUUID(id)) return { error: 'ID inválido.' };
 
-  const supabase = getAdmin();
+  const supabase = auth.client;
 
   const { data: album, error: fetchError } = await supabase
     .from('galeria_albuns')
@@ -220,8 +239,9 @@ export async function criarVideo(formData: {
   categoria: string;
   status: string;
 }) {
-  try { await requireAuth(); } catch { return { error: 'Não autenticado.' }; }
-  const supabase = getAdmin();
+  const auth = await requireAuth().catch(() => null);
+  if (!auth) return { error: 'Não autenticado.' };
+  const supabase = auth.client;
 
   const titulo = sanitize(formData.titulo);
   const descricao = sanitize(formData.descricao);
@@ -252,10 +272,11 @@ export async function criarVideo(formData: {
 }
 
 export async function excluirVideo(id: string) {
-  try { await requireAuth(); } catch { return { error: 'Não autenticado.' }; }
+  const auth = await requireAuth().catch(() => null);
+  if (!auth) return { error: 'Não autenticado.' };
   if (!isValidUUID(id)) return { error: 'ID inválido.' };
 
-  const supabase = getAdmin();
+  const supabase = auth.client;
   const { error } = await supabase.from('videos').delete().eq('id', id);
   if (error) return { error: 'Erro ao excluir vídeo.' };
   revalidatePath('/admin/videos');
@@ -263,10 +284,11 @@ export async function excluirVideo(id: string) {
 }
 
 export async function toggleStatusVideo(id: string) {
-  try { await requireAuth(); } catch { return { error: 'Não autenticado.' }; }
+  const auth = await requireAuth().catch(() => null);
+  if (!auth) return { error: 'Não autenticado.' };
   if (!isValidUUID(id)) return { error: 'ID inválido.' };
 
-  const supabase = getAdmin();
+  const supabase = auth.client;
 
   const { data: video, error: fetchError } = await supabase
     .from('videos')
@@ -288,10 +310,11 @@ export async function toggleStatusVideo(id: string) {
 // ============================================
 
 export async function atualizarConfiguracao(id: string, valor: string) {
-  try { await requireAuth(); } catch { return { error: 'Não autenticado.' }; }
+  const auth = await requireAuth().catch(() => null);
+  if (!auth) return { error: 'Não autenticado.' };
   if (!isValidUUID(id)) return { error: 'ID inválido.' };
 
-  const supabase = getAdmin();
+  const supabase = auth.client;
   const sanitized = sanitize(valor);
   const { error } = await supabase.from('configuracoes').update({ valor: sanitized }).eq('id', id);
   if (error) return { error: 'Erro ao salvar configuração.' };
@@ -300,7 +323,74 @@ export async function atualizarConfiguracao(id: string, valor: string) {
 }
 
 // ============================================
-// Leads (Captação) — Rate Limiting via IP
+// Login — Rate Limiting por IP
+// ============================================
+
+const loginRateLimit = new Map<string, { count: number; resetAt: number }>();
+const LOGIN_MAX_ATTEMPTS = 5;
+const LOGIN_WINDOW_MS = 15 * 60 * 1000; // 15 minutos
+
+function checkLoginRateLimit(ip: string): boolean {
+  const now = Date.now();
+  const entry = loginRateLimit.get(ip);
+
+  if (!entry || now > entry.resetAt) {
+    loginRateLimit.set(ip, { count: 1, resetAt: now + LOGIN_WINDOW_MS });
+    return true;
+  }
+
+  if (entry.count >= LOGIN_MAX_ATTEMPTS) return false;
+
+  entry.count++;
+  return true;
+}
+
+export async function loginAction(email: string, password: string) {
+  const hdrs = await headers();
+  const forwarded = hdrs.get('x-forwarded-for');
+  const realIp = hdrs.get('x-real-ip');
+  const ip = forwarded?.split(',')[0]?.trim() || realIp || 'unknown';
+
+  if (!checkLoginRateLimit(ip)) {
+    return { error: 'Muitas tentativas. Aguarde 15 minutos e tente novamente.' };
+  }
+
+  if (!email || !password) {
+    return { error: 'Email e senha são obrigatórios.' };
+  }
+
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (!url || !anonKey) return { error: 'Configuração incorreta.' };
+
+  const cookieStore = await cookies();
+  const supabase = createServerClient(url, anonKey, {
+    cookies: {
+      get(name: string) {
+        return cookieStore.get(name)?.value;
+      },
+      set(name: string, value: string) {
+        cookieStore.set(name, value, {
+          httpOnly: true,
+          secure: true,
+          sameSite: 'lax',
+          path: '/',
+        });
+      },
+      remove(name: string) {
+        cookieStore.set(name, '', { path: '/' });
+      },
+    },
+  });
+
+  const { error } = await supabase.auth.signInWithPassword({ email, password });
+  if (error) return { error: 'E-mail ou senha inválidos.' };
+
+  return { success: true };
+}
+
+// ============================================
+// Leads (Captação) — Rate Limiting via IP real
 // ============================================
 
 const leadRateLimit = new Map<string, { count: number; resetAt: number }>();
@@ -330,11 +420,28 @@ export async function criarLead(formData: {
   email: string;
   bairro: string;
   cidade: string;
-  ip?: string;
+  _website?: string;
+  _phone?: string;
+  consent?: string;
 }) {
-  const ip = formData.ip || 'unknown';
+  // IP real do servidor — impossível de spoofar pelo client
+  const hdrs = await headers();
+  const forwarded = hdrs.get('x-forwarded-for');
+  const realIp = hdrs.get('x-real-ip');
+  const ip = forwarded?.split(',')[0]?.trim() || realIp || 'unknown';
+
   if (!checkLeadRateLimit(ip)) {
     return { error: 'Limite de envios atingido. Tente novamente mais tarde.' };
+  }
+
+  // Honeypot: se preenchido, é bot — aceita silenciosamente
+  if (formData._website || formData._phone) {
+    return { success: true };
+  }
+
+  // Consentimento LGPD obrigatório
+  if (formData.consent !== 'true') {
+    return { error: 'Você precisa concordar com a Política de Privacidade para continuar.' };
   }
 
   const nome = sanitize(formData.nome);
@@ -351,6 +458,7 @@ export async function criarLead(formData: {
     return { error: 'Dados excedem o tamanho permitido.' };
   }
 
+  // Leads usam service role pois é rota pública sem sessão de usuário
   const supabase = getAdmin();
   const { error } = await supabase.from('leads').insert({
     nome,
@@ -365,10 +473,11 @@ export async function criarLead(formData: {
 }
 
 export async function excluirLead(id: string) {
-  try { await requireAuth(); } catch { return { error: 'Não autenticado.' }; }
+  const auth = await requireAuth().catch(() => null);
+  if (!auth) return { error: 'Não autenticado.' };
   if (!isValidUUID(id)) return { error: 'ID inválido.' };
 
-  const supabase = getAdmin();
+  const supabase = auth.client;
   const { error } = await supabase.from('leads').delete().eq('id', id);
   if (error) return { error: 'Erro ao excluir lead.' };
   revalidatePath('/admin/leads');
@@ -386,8 +495,9 @@ export async function criarCompromisso(formData: {
   local: string;
   status: string;
 }) {
-  try { await requireAuth(); } catch { return { error: 'Não autenticado.' }; }
-  const supabase = getAdmin();
+  const auth = await requireAuth().catch(() => null);
+  if (!auth) return { error: 'Não autenticado.' };
+  const supabase = auth.client;
 
   const titulo = sanitize(formData.titulo);
   const descricao = sanitize(formData.descricao);
@@ -413,10 +523,11 @@ export async function criarCompromisso(formData: {
 }
 
 export async function excluirCompromisso(id: string) {
-  try { await requireAuth(); } catch { return { error: 'Não autenticado.' }; }
+  const auth = await requireAuth().catch(() => null);
+  if (!auth) return { error: 'Não autenticado.' };
   if (!isValidUUID(id)) return { error: 'ID inválido.' };
 
-  const supabase = getAdmin();
+  const supabase = auth.client;
   const { error } = await supabase.from('agenda').delete().eq('id', id);
   if (error) return { error: 'Erro ao excluir compromisso.' };
   revalidatePath('/admin/agenda');
@@ -425,10 +536,11 @@ export async function excluirCompromisso(id: string) {
 }
 
 export async function toggleStatusCompromisso(id: string) {
-  try { await requireAuth(); } catch { return { error: 'Não autenticado.' }; }
+  const auth = await requireAuth().catch(() => null);
+  if (!auth) return { error: 'Não autenticado.' };
   if (!isValidUUID(id)) return { error: 'ID inválido.' };
 
-  const supabase = getAdmin();
+  const supabase = auth.client;
 
   const { data: compromisso, error: fetchError } = await supabase
     .from('agenda')
@@ -454,10 +566,11 @@ export async function adicionarFotosAlbum(
   albumId: string,
   fotos: { url: string; legenda?: string }[]
 ) {
-  try { await requireAuth(); } catch { return { error: 'Não autenticado.' }; }
+  const auth = await requireAuth().catch(() => null);
+  if (!auth) return { error: 'Não autenticado.' };
   if (!isValidUUID(albumId)) return { error: 'ID do álbum inválido.' };
 
-  const supabase = getAdmin();
+  const supabase = auth.client;
 
   const { data: existing, error: countError } = await supabase
     .from('galeria_fotos')
@@ -486,10 +599,11 @@ export async function adicionarFotosAlbum(
 }
 
 export async function excluirFotoAlbum(fotoId: string) {
-  try { await requireAuth(); } catch { return { error: 'Não autenticado.' }; }
+  const auth = await requireAuth().catch(() => null);
+  if (!auth) return { error: 'Não autenticado.' };
   if (!isValidUUID(fotoId)) return { error: 'ID inválido.' };
 
-  const supabase = getAdmin();
+  const supabase = auth.client;
 
   const { data: foto, error: fetchError } = await supabase
     .from('galeria_fotos')
@@ -508,10 +622,11 @@ export async function excluirFotoAlbum(fotoId: string) {
 }
 
 export async function atualizarCapaAlbum(albumId: string, coverUrl: string) {
-  try { await requireAuth(); } catch { return { error: 'Não autenticado.' }; }
+  const auth = await requireAuth().catch(() => null);
+  if (!auth) return { error: 'Não autenticado.' };
   if (!isValidUUID(albumId)) return { error: 'ID inválido.' };
 
-  const supabase = getAdmin();
+  const supabase = auth.client;
   const { error } = await supabase
     .from('galeria_albuns')
     .update({ cover_url: coverUrl })
@@ -539,10 +654,11 @@ export async function editarProjeto(
     status: string;
   }
 ) {
-  try { await requireAuth(); } catch { return { error: 'Não autenticado.' }; }
+  const auth = await requireAuth().catch(() => null);
+  if (!auth) return { error: 'Não autenticado.' };
   if (!isValidUUID(id)) return { error: 'ID inválido.' };
 
-  const supabase = getAdmin();
+  const supabase = auth.client;
 
   const titulo = sanitize(formData.titulo);
   const slug = validateSlug(formData.slug || formData.titulo);
@@ -576,10 +692,11 @@ export async function editarAlbum(
     status: string;
   }
 ) {
-  try { await requireAuth(); } catch { return { error: 'Não autenticado.' }; }
+  const auth = await requireAuth().catch(() => null);
+  if (!auth) return { error: 'Não autenticado.' };
   if (!isValidUUID(id)) return { error: 'ID inválido.' };
 
-  const supabase = getAdmin();
+  const supabase = auth.client;
 
   const titulo = sanitize(formData.titulo);
   const descricao = sanitize(formData.descricao);
@@ -611,10 +728,11 @@ export async function editarVideo(
     status: string;
   }
 ) {
-  try { await requireAuth(); } catch { return { error: 'Não autenticado.' }; }
+  const auth = await requireAuth().catch(() => null);
+  if (!auth) return { error: 'Não autenticado.' };
   if (!isValidUUID(id)) return { error: 'ID inválido.' };
 
-  const supabase = getAdmin();
+  const supabase = auth.client;
 
   const titulo = sanitize(formData.titulo);
   const descricao = sanitize(formData.descricao);
@@ -650,10 +768,11 @@ export async function editarCompromisso(
     status: string;
   }
 ) {
-  try { await requireAuth(); } catch { return { error: 'Não autenticado.' }; }
+  const auth = await requireAuth().catch(() => null);
+  if (!auth) return { error: 'Não autenticado.' };
   if (!isValidUUID(id)) return { error: 'ID inválido.' };
 
-  const supabase = getAdmin();
+  const supabase = auth.client;
 
   const titulo = sanitize(formData.titulo);
   const descricao = sanitize(formData.descricao);

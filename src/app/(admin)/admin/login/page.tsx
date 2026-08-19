@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { supabase } from '@/lib/supabase';
+import { loginAction } from '@/app/(admin)/admin/actions';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -15,17 +15,15 @@ export default function LoginPage() {
     setError('');
 
     try {
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
+      const result = await loginAction(email, password);
 
-      if (error) throw error;
-
-      window.location.href = '/admin';
-    } catch (err: unknown) {
-      console.error('Erro de login:', err instanceof Error ? err.message : err);
-      setError('E-mail ou senha inválidos, ou erro de conexão.');
+      if (result?.error) {
+        setError(result.error);
+      } else {
+        window.location.href = '/admin';
+      }
+    } catch {
+      setError('Erro de conexão. Tente novamente.');
     } finally {
       setLoading(false);
     }
@@ -39,7 +37,7 @@ export default function LoginPage() {
             Painel Administrativo
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600">
-            Lucas Mourão - Site Institucional
+            Lucas Mourao - Site Institucional
           </p>
         </div>
         <form className="mt-8 space-y-6" onSubmit={handleLogin}>
