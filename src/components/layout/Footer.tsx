@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 import WeatherWidget from '@/components/ui/WeatherWidget';
 
@@ -134,9 +135,11 @@ export default function Footer() {
 
           {/* Centro: Logo */}
           <div className="flex justify-center shrink-0">
-            <img
+            <Image
               src="/assets/images/logo/logo-lucas.png"
               alt="Lucas Mourão"
+              width={180}
+              height={50}
               className="h-auto"
               style={{ width: '120px', transform: 'scale(1.5)' }}
             />

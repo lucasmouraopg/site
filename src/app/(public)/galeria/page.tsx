@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { getGaleriaAlbuns, type GaleriaAlbum } from '@/lib/supabase-server';
 
 export default async function GaleriaPage() {
@@ -36,9 +37,11 @@ export default async function GaleriaPage() {
               >
                 <div className="relative h-56 rounded-2xl overflow-hidden bg-gray-100 mb-4">
                   {album.cover_url ? (
-                    <img
+                    <Image
                       src={album.cover_url}
                       alt={album.titulo}
+                      width={640}
+                      height={224}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     />
                   ) : (

@@ -2,6 +2,7 @@
 
 import { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
+import Image from 'next/image';
 
 export default function Hero() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -24,9 +25,12 @@ export default function Hero() {
       >
         {/* MOBILE: full image, no overlay */}
         <div className="md:hidden w-full">
-          <img
+          <Image
             src="/assets/images/hero/hero-mobile.png"
             alt="Lucas Mourão"
+            width={1080}
+            height={1920}
+            priority
             className="w-full h-auto block"
           />
         </div>

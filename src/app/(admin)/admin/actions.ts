@@ -300,8 +300,29 @@ export async function atualizarConfiguracao(id: string, valor: string) {
 }
 
 // ============================================
-// Leads (Captação)
+// Leads (Captação) — Rate Limiting via IP
 // ============================================
+
+const leadRateLimit = new Map<string, { count: number; resetAt: number }>();
+const LEAD_MAX_SUBMISSIONS = 3;
+const LEAD_WINDOW_MS = 60 * 60 * 1000; // 1 hora
+
+function checkLeadRateLimit(ip: string): boolean {
+  const now = Date.now();
+  const entry = leadRateLimit.get(ip);
+
+  if (!entry || now > entry.resetAt) {
+    leadRateLimit.set(ip, { count: 1, resetAt: now + LEAD_WINDOW_MS });
+    return true;
+  }
+
+  if (entry.count >= LEAD_MAX_SUBMISSIONS) {
+    return false;
+  }
+
+  entry.count++;
+  return true;
+}
 
 export async function criarLead(formData: {
   nome: string;
@@ -309,7 +330,13 @@ export async function criarLead(formData: {
   email: string;
   bairro: string;
   cidade: string;
+  ip?: string;
 }) {
+  const ip = formData.ip || 'unknown';
+  if (!checkLeadRateLimit(ip)) {
+    return { error: 'Limite de envios atingido. Tente novamente mais tarde.' };
+  }
+
   const nome = sanitize(formData.nome);
   const whatsapp = sanitize(formData.whatsapp);
   const email = sanitize(formData.email);
@@ -318,6 +345,10 @@ export async function criarLead(formData: {
 
   if (!nome || !whatsapp) {
     return { error: 'Nome e WhatsApp são obrigatórios.' };
+  }
+
+  if (nome.length > 200 || whatsapp.length > 20) {
+    return { error: 'Dados excedem o tamanho permitido.' };
   }
 
   const supabase = getAdmin();

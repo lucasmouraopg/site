@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import useEmblaCarousel from 'embla-carousel-react';
 import type { GaleriaFoto, Video } from '@/lib/supabase';
 import Modal from '@/components/ui/Modal';
@@ -85,9 +86,11 @@ export default function AlbumDetail({ albumId, fotos, videos }: Props) {
                     onClick={() => setLightboxSrc(foto.url)}
                     className="flex-none w-64 h-48 rounded-xl overflow-hidden bg-gray-100 group cursor-pointer"
                   >
-                    <img
+                    <Image
                       src={foto.url}
                       alt={foto.legenda || ''}
+                      width={256}
+                      height={192}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     />
                   </button>
@@ -152,9 +155,11 @@ export default function AlbumDetail({ albumId, fotos, videos }: Props) {
                     >
                       <div className="aspect-video rounded-xl overflow-hidden bg-gray-100 relative">
                         {ytId ? (
-                          <img
+                          <Image
                             src={`https://img.youtube.com/vi/${ytId}/hqdefault.jpg`}
                             alt={video.titulo}
+                            width={320}
+                            height={180}
                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                           />
                         ) : (

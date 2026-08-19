@@ -138,11 +138,12 @@ export async function getFotosByAlbum(albumId: string) {
   return data ?? [];
 }
 
-export async function getVideosByAlbum(_albumId: string) { // eslint-disable-line @typescript-eslint/no-unused-vars
+export async function getVideosByAlbum(albumId: string) {
   const supabase = await createCookieClient();
   const { data } = await supabase
     .from('videos')
     .select('*')
+    .eq('album_id', albumId)
     .eq('status', 'publicado')
     .order('ordem', { ascending: true });
   return data ?? [];

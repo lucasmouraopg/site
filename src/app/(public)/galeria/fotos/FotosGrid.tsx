@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import type { GaleriaFoto } from '@/lib/supabase';
 
 interface Props {
@@ -19,9 +20,11 @@ export default function FotosGrid({ fotos }: Props) {
             onClick={() => setLightboxSrc(foto.url)}
             className="aspect-square rounded-xl overflow-hidden bg-gray-100 group"
           >
-            <img
+            <Image
               src={foto.url}
               alt={foto.legenda || ''}
+              width={400}
+              height={400}
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
             />
           </button>

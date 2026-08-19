@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     description: 'RAIZES QUE MOLDAM UM NOVO TEMPO',
     images: [
       {
-        url: '/assets/images/og/og-image.jpg',
+        url: 'https://lucasmourao.com.br/assets/images/og/og-image.jpg',
         width: 1200,
         height: 630,
         alt: 'Lucas Mourão',
@@ -47,7 +47,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'LUCAS MOURÃO - PRÉ CANDIDATO A DEPUTADO ESTADUAL',
     description: 'RAIZES QUE MOLDAM UM NOVO TEMPO',
-    images: ['/assets/images/og/og-image.jpg'],
+    images: ['https://lucasmourao.com.br/assets/images/og/og-image.jpg'],
   },
   icons: {
     icon: '/assets/images/logo/favicon.png',

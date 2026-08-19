@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import useEmblaCarousel from 'embla-carousel-react';
 import { supabase, GaleriaAlbum } from '@/lib/supabase';
 
@@ -87,9 +88,11 @@ export default function GaleriaEventos() {
                 >
                   <div className="relative h-48 rounded-2xl overflow-hidden bg-gray-100 mb-3">
                     {album.cover_url ? (
-                      <img
+                      <Image
                         src={album.cover_url}
                         alt={album.titulo}
+                        width={384}
+                        height={192}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                       />
                     ) : (
@@ -127,9 +130,11 @@ export default function GaleriaEventos() {
                     >
                       <div className="relative h-56 rounded-2xl overflow-hidden bg-gray-100 mb-3">
                         {album.cover_url ? (
-                          <img
+                          <Image
                             src={album.cover_url}
                             alt={album.titulo}
+                            width={640}
+                            height={224}
                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                           />
                         ) : (

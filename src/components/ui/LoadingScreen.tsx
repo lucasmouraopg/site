@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import Image from 'next/image';
 
 const DURATION = 2000;
 
@@ -209,9 +210,12 @@ export default function LoadingScreen() {
               animate={{ scale: [1, 1.15, 1], opacity: [0.3, 0.6, 0.3] }}
               transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
             />
-            <img
+            <Image
               src="/assets/images/logo/logo-lucas.png"
               alt="Lucas Mourão"
+              width={320}
+              height={80}
+              priority
               className="relative w-[280px] md:w-[320px] h-auto"
             />
           </motion.div>
