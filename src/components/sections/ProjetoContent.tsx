@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import type { Projeto } from '@/lib/supabase';
@@ -82,11 +83,12 @@ export default function ProjetoContent({ projeto }: ProjetoContentProps) {
           className="mb-8"
         >
           <div className="aspect-video rounded-2xl overflow-hidden shadow-xl">
-            <div
-              className="w-full h-full bg-cover bg-center bg-no-repeat"
-              style={{
-                backgroundImage: `url(${projeto.fotos[0]})`,
-              }}
+            <Image
+              src={projeto.fotos[0]}
+              alt={projeto.titulo}
+              fill
+              sizes="100vw"
+              className="object-cover"
             />
           </div>
         </motion.div>
@@ -121,9 +123,12 @@ export default function ProjetoContent({ projeto }: ProjetoContentProps) {
                   key={index}
                   className="aspect-square rounded-xl overflow-hidden shadow-lg cursor-pointer hover:shadow-2xl transition-shadow"
                 >
-                  <div
-                    className="w-full h-full bg-cover bg-center bg-no-repeat hover:scale-105 transition-transform duration-300"
-                    style={{ backgroundImage: `url(${foto})` }}
+                  <Image
+                    src={foto}
+                    alt={`${projeto.titulo} - Foto ${index + 1}`}
+                    fill
+                    sizes="(max-width: 768px) 50vw, 33vw"
+                    className="object-cover hover:scale-105 transition-transform duration-300"
                   />
                 </div>
               ))}

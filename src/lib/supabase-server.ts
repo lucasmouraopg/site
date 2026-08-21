@@ -2,7 +2,7 @@ import { createServerClient } from '@supabase/ssr';
 import { createClient } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
 
-export type { GaleriaAlbum, GaleriaFoto, Video, RedeSocial, Configuracao, Projeto } from './supabase';
+export type { GaleriaAlbum, GaleriaFoto, Video, RedeSocial, Configuracao, Projeto } from '@/types';
 
 async function createCookieClient() {
   const cookieStore = await cookies();

@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
+import Image from 'next/image';
 import useEmblaCarousel from 'embla-carousel-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -67,7 +68,7 @@ function Lightbox({
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.25 }}
-      className="fixed inset-0 z-[200] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
       onClick={onClose}
     >
       <button
@@ -146,11 +147,11 @@ export default function Biografia() {
             className="flex"
           >
             <div className="w-full aspect-[4/5] rounded-2xl overflow-hidden shadow-2xl">
-              <div
-                className="w-full h-full bg-cover bg-center bg-no-repeat hover:scale-105 transition-transform duration-500"
-                style={{
-                  backgroundImage: 'url(/assets/images/bio/LUCAS1.PNG)',
-                }}
+              <Image
+                src="/assets/images/bio/LUCAS1.PNG"
+                alt="Lucas Mourão"
+                fill
+                className="object-cover hover:scale-105 transition-transform duration-500"
               />
             </div>
           </motion.div>
@@ -212,9 +213,11 @@ export default function Biografia() {
                   onClick={() => setLightboxSrc(src)}
                 >
                   <div className="aspect-square rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-shadow duration-300">
-                    <div
-                      className="w-full h-full bg-cover bg-center bg-no-repeat hover:scale-105 transition-transform duration-500"
-                      style={{ backgroundImage: `url(${src})` }}
+                    <Image
+                      src={src}
+                      alt="Galeria Biografia"
+                      fill
+                      className="object-cover hover:scale-105 transition-transform duration-500"
                     />
                   </div>
                 </div>

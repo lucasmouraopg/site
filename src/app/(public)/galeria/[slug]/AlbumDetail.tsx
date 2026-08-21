@@ -226,7 +226,7 @@ export default function AlbumDetail({ albumId, fotos, videos }: Props) {
       {/* ===== LIGHTBOX (FOTOS) ===== */}
       {lightboxSrc && (
         <div
-          className="fixed inset-0 z-[200] bg-black/90 flex items-center justify-center p-4 cursor-pointer"
+          className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4 cursor-pointer"
           onClick={() => setLightboxSrc(null)}
         >
           <button

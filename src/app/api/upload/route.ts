@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@supabase/ssr';
 import { v2 as cloudinary } from 'cloudinary';
 
-const ADMIN_UUID = '7855f56b-16dc-474d-8fb8-44ef9e1072d8';
+const ADMIN_UUID = process.env.ADMIN_USER_ID!;
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 const MAX_FILES = 10;
 
@@ -56,7 +56,7 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-async function getSession(request: NextRequest) {
+async function getUser(request: NextRequest) {
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -70,19 +70,19 @@ async function getSession(request: NextRequest) {
       },
     }
   );
-  const { data: { session } } = await supabase.auth.getSession();
-  return { session, supabase };
+  const { data: { user }, error } = await supabase.auth.getUser();
+  return { user, error, supabase };
 }
 
 export async function POST(request: NextRequest) {
   try {
-    const { session } = await getSession(request);
+    const { user, error } = await getUser(request);
 
-    if (!session) {
+    if (error || !user) {
       return NextResponse.json({ error: 'Nao autenticado.' }, { status: 401 });
     }
 
-    if (session.user.id !== ADMIN_UUID) {
+    if (user.id !== ADMIN_UUID) {
       return NextResponse.json({ error: 'Acesso negado.' }, { status: 403 });
     }
 

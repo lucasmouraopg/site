@@ -3,6 +3,7 @@
 import { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import Image from 'next/image';
+import { siteLinks } from '@/data/site-config';
 
 export default function Hero() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -40,12 +41,13 @@ export default function Hero() {
           style={{ y }}
           className="hidden md:block absolute inset-0 w-full h-full"
         >
-          <div
-            className="w-full h-full bg-cover bg-center bg-no-repeat"
-            style={{
-              backgroundImage: 'url(/assets/images/hero/hero-desktop.jpg)',
-              backgroundPosition: 'center 30%',
-            }}
+          <Image
+            src="/assets/images/hero/hero-desktop.jpg"
+            alt="Lucas Mourão"
+            fill
+            priority
+            className="object-cover"
+            style={{ objectPosition: 'center 30%' }}
           />
         </motion.div>
 
@@ -61,7 +63,7 @@ export default function Hero() {
             className="flex flex-col sm:flex-row gap-4"
           >
             <a
-              href="https://www.canaldabaixada.com.br"
+              href={siteLinks.canalDaBaixada}
               target="_blank"
               rel="noopener noreferrer"
               className="px-8 py-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-all duration-300 hover:scale-105 hover:shadow-lg text-center uppercase tracking-wide"
@@ -69,7 +71,7 @@ export default function Hero() {
               Canal da Baixada
             </a>
             <a
-              href="https://wa.me/5513981252092"
+              href={siteLinks.whatsapp}
               target="_blank"
               rel="noopener noreferrer"
               className="px-8 py-4 bg-green-500 text-white font-semibold rounded-lg hover:bg-green-600 transition-all duration-300 hover:scale-105 hover:shadow-lg flex items-center justify-center gap-2"
@@ -111,7 +113,7 @@ export default function Hero() {
           className="flex flex-col gap-4"
         >
           <a
-            href="https://www.canaldabaixada.com.br"
+            href={siteLinks.canalDaBaixada}
             target="_blank"
             rel="noopener noreferrer"
             className="w-full px-6 py-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-all duration-300 text-center uppercase tracking-wide"
@@ -119,7 +121,7 @@ export default function Hero() {
             Canal da Baixada
           </a>
           <a
-            href="https://wa.me/5513981252092"
+            href={siteLinks.whatsapp}
             target="_blank"
             rel="noopener noreferrer"
             className="w-full px-6 py-4 bg-green-500 text-white font-semibold rounded-lg hover:bg-green-600 transition-all duration-300 flex items-center justify-center gap-2"

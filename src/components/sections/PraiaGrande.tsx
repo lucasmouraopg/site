@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import useEmblaCarousel from 'embla-carousel-react';
 import { motion } from 'framer-motion';
@@ -80,9 +81,12 @@ export default function PraiaGrande({ projetos }: PraiaGrandeProps) {
                   <Link href={`/projetos/${projeto.slug}`} className="block h-full">
                     <div className="h-full flex flex-col group cursor-pointer bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300">
                       <div className="relative aspect-[4/3] overflow-hidden shrink-0">
-                        <div
-                          className="w-full h-full bg-cover bg-center bg-no-repeat transform group-hover:scale-105 transition-transform duration-500"
-                          style={{ backgroundImage: `url(${projeto.fotos[0]})` }}
+                        <Image
+                          src={projeto.fotos[0]}
+                          alt={projeto.titulo}
+                          fill
+                          sizes="(max-width: 768px) 100vw, 50vw"
+                          className="object-cover transform group-hover:scale-105 transition-transform duration-500"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
                         <div className="absolute top-4 left-4">
@@ -121,9 +125,12 @@ export default function PraiaGrande({ projetos }: PraiaGrandeProps) {
                     >
                       <div className="h-full flex flex-col bg-white rounded-2xl overflow-hidden shadow-lg">
                         <div className="relative aspect-[4/3] overflow-hidden shrink-0">
-                          <div
-                            className="w-full h-full bg-cover bg-center bg-no-repeat transform group-hover:scale-105 transition-transform duration-500"
-                            style={{ backgroundImage: `url(${projeto.fotos[0]})` }}
+                          <Image
+                            src={projeto.fotos[0]}
+                            alt={projeto.titulo}
+                            fill
+                            sizes="100vw"
+                            className="object-cover transform group-hover:scale-105 transition-transform duration-500"
                           />
                           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
                           <div className="absolute top-4 left-4">

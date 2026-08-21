@@ -1,4 +1,4 @@
-export interface Projeto {
+export interface ProjetoLocal {
   slug: string;
   titulo: string;
   resumo: string;
@@ -8,7 +8,7 @@ export interface Projeto {
   shareText: string;
 }
 
-export const projetos: Projeto[] = [
+export const projetos: ProjetoLocal[] = [
   {
     slug: 'portinho',
     titulo: 'Revitalização do Portinho',
@@ -77,7 +77,7 @@ export const projetos: Projeto[] = [
   },
 ];
 
-export function getProjetoBySlug(slug: string): Projeto | undefined {
+export function getProjetoBySlug(slug: string): ProjetoLocal | undefined {
   return projetos.find((p) => p.slug === slug);
 }
 

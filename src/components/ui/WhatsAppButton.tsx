@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { siteLinks } from '@/data/site-config';
 
 export default function WhatsAppButton() {
   const [isVisible, setIsVisible] = useState(false);
@@ -26,10 +27,10 @@ export default function WhatsAppButton() {
           initial={{ opacity: 0, scale: 0.5 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.5 }}
-          href="https://wa.me/5513981252092"
+          href={siteLinks.whatsapp}
           target="_blank"
           rel="noopener noreferrer"
-          className="fixed bottom-24 right-6 z-50 w-14 h-14 bg-green-500 text-white rounded-full shadow-lg hover:bg-green-600 transition-colors duration-300 flex items-center justify-center"
+          className="fixed bottom-24 right-6 z-30 w-14 h-14 bg-green-500 text-white rounded-full shadow-lg hover:bg-green-600 transition-colors duration-300 flex items-center justify-center"
           aria-label="Fale conosco pelo WhatsApp"
         >
           <svg

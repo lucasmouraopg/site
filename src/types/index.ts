@@ -1,65 +1,63 @@
-// Site types
-export interface SiteConfig {
-  heroHeadline: string;
-  heroSubheadline: string;
-  heroCta: string;
-  heroImageDesktop: string;
-  heroImageMobile: string;
-  bioTitle: string;
-  bioText: string;
-  bioImage: string;
-  bioCta: string;
-  whatsappLink: string;
-  instagramLink: string;
-  facebookLink: string;
-  tiktokLink: string;
-  linkedinLink: string;
-  siteLink: string;
-}
-
-// Weather types
-export interface WeatherData {
-  city: string;
-  temp: number;
-  description: string;
-  icon: string;
-}
-
-// Gallery types
-export interface Album {
+// Database types (canonical source)
+export interface GaleriaAlbum {
   id: string;
   titulo: string;
   descricao: string;
   categoria: string;
   cover_url: string;
   fotos_count: number;
-  fotos: Foto[];
+  status: 'publicado' | 'rascunho';
+  criado_em: string;
 }
 
-export interface Foto {
+export interface GaleriaFoto {
   id: string;
+  album_id: string;
   url: string;
   legenda: string;
+  ordem: number;
 }
 
-// Video types
-export interface VideoItem {
+export interface Video {
   id: string;
   titulo: string;
   descricao: string;
   youtube_url: string;
   thumbnail_url: string;
+  album_id: string | null;
   categoria: string;
+  ordem: number;
+  status: 'publicado' | 'rascunho';
+  criado_em: string;
 }
 
-// Timeline types
-export interface TimelineItem {
+export interface RedeSocial {
   id: string;
-  empresa: string;
-  cargo: string;
+  plataforma: string;
+  url: string;
+  icone: string;
+  ordem: number;
+  ativo: boolean;
+}
+
+export interface Configuracao {
+  id: string;
+  chave: string;
+  valor: string;
+  atualizado_em: string;
+}
+
+export interface Projeto {
+  id: string;
+  slug: string;
+  titulo: string;
+  resumo: string;
   descricao: string;
-  imagem_url: string;
-  logo_url: string;
-  ano_inicio: string;
-  ano_fim: string;
+  categoria: string;
+  fotos: string[];
+  share_text: string;
+  ordem: number;
+  status: 'publicado' | 'rascunho';
+  criado_em: string;
+  atualizado_em: string;
 }
