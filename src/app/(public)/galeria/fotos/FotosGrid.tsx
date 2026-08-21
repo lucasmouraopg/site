@@ -17,6 +17,7 @@ export default function FotosGrid({ fotos }: Props) {
         {fotos.map((foto) => (
           <button
             key={foto.id}
+            aria-label={`Ver foto: ${foto.legenda || 'sem legenda'}`}
             onClick={() => setLightboxSrc(foto.url)}
             className="aspect-square rounded-xl overflow-hidden bg-gray-100 group"
           >
@@ -34,16 +35,24 @@ export default function FotosGrid({ fotos }: Props) {
       {lightboxSrc && (
         <div
           className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4 cursor-pointer"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Foto ampliada"
           onClick={() => setLightboxSrc(null)}
         >
           <img
             src={lightboxSrc}
             alt="Foto ampliada"
             className="max-w-full max-h-full object-contain rounded-lg"
+            onClick={(e) => e.stopPropagation()}
           />
           <button
+            aria-label="Fechar"
             className="absolute top-6 right-6 text-white/70 hover:text-white"
-            onClick={() => setLightboxSrc(null)}
+            onClick={(e) => {
+              e.stopPropagation();
+              setLightboxSrc(null);
+            }}
           >
             <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />

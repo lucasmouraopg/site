@@ -135,7 +135,9 @@ export async function getAllProjetoSlugs(): Promise<string[]> {
 
     if (error) throw error;
     if (data && data.length > 0) return data.map((p) => p.slug);
-  } catch {}
+  } catch (e) {
+    console.warn('[supabase] getAllProjetoSlugs fallback to local data:', e);
+  }
 
   const { getAllSlugs } = await import('@/data/projetos');
   return getAllSlugs();

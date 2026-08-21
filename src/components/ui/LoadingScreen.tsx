@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import Image from 'next/image';
+import { useReducedMotion } from '@/hooks/useReducedMotion';
 
 const DURATION = 2000;
 
@@ -14,6 +15,7 @@ function WaveLayer({
   delay,
   bottom,
   rotateX,
+  reducedMotion,
 }: {
   d: string;
   fill: string;
@@ -22,6 +24,7 @@ function WaveLayer({
   delay: number;
   bottom: string;
   rotateX: number;
+  reducedMotion: boolean;
 }) {
   return (
     <motion.div
@@ -34,10 +37,10 @@ function WaveLayer({
         transformOrigin: 'center bottom',
       }}
       initial={{ x: '-12%', opacity: 0 }}
-      animate={{ x: ['0%', '-12%', '5%', '-8%', '0%'], opacity }}
+      animate={reducedMotion ? { x: '0%', opacity } : { x: ['0%', '-12%', '5%', '-8%', '0%'], opacity }}
       transition={{
-        x: { duration, repeat: Infinity, ease: 'easeInOut', delay },
-        opacity: { duration: 1.2, delay: 0.1 + delay * 0.15, ease: 'easeOut' },
+        x: { duration: reducedMotion ? 0 : duration, repeat: reducedMotion ? 0 : Infinity, ease: 'easeInOut', delay },
+        opacity: { duration: reducedMotion ? 0 : 1.2, delay: reducedMotion ? 0 : 0.1 + delay * 0.15, ease: 'easeOut' },
       }}
     >
       <svg
@@ -51,7 +54,7 @@ function WaveLayer({
   );
 }
 
-function FoamParticles() {
+function FoamParticles({ reducedMotion }: { reducedMotion: boolean }) {
   const particles = [
     { x: 10, y: 25, size: 5, dur: 4.5, delay: 0 },
     { x: 22, y: 45, size: 4, dur: 5.2, delay: 0.3 },
@@ -79,13 +82,10 @@ function FoamParticles() {
             width: p.size,
             height: p.size,
           }}
-          animate={{
-            y: [0, -15, 0, 10, 0],
-            opacity: [0, 0.7, 0.4, 0.7, 0],
-          }}
+          animate={reducedMotion ? { y: 0, opacity: 0.5 } : { y: [0, -15, 0, 10, 0], opacity: [0, 0.7, 0.4, 0.7, 0] }}
           transition={{
-            duration: p.dur,
-            repeat: Infinity,
+            duration: reducedMotion ? 0 : p.dur,
+            repeat: reducedMotion ? 0 : Infinity,
             ease: 'easeInOut',
             delay: p.delay,
           }}
@@ -95,7 +95,7 @@ function FoamParticles() {
   );
 }
 
-function BeachWaves() {
+function BeachWaves({ reducedMotion }: { reducedMotion: boolean }) {
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
       {/* Radial glow — very visible */}
@@ -110,6 +110,7 @@ function BeachWaves() {
         delay={0}
         bottom="0%"
         rotateX={18}
+        reducedMotion={reducedMotion}
       />
       <WaveLayer
         d="M0,0 C250,65 500,10 750,50 C1000,85 1250,20 1600,45 L1600,250 L0,250 Z"
@@ -119,6 +120,7 @@ function BeachWaves() {
         delay={0.3}
         bottom="10%"
         rotateX={22}
+        reducedMotion={reducedMotion}
       />
       <WaveLayer
         d="M0,0 C300,70 500,5 750,55 C1000,95 1250,15 1600,60 L1600,250 L0,250 Z"
@@ -128,6 +130,7 @@ function BeachWaves() {
         delay={0.6}
         bottom="20%"
         rotateX={28}
+        reducedMotion={reducedMotion}
       />
       <WaveLayer
         d="M0,0 C200,40 450,95 700,50 C950,10 1200,85 1600,45 L1600,250 L0,250 Z"
@@ -137,6 +140,7 @@ function BeachWaves() {
         delay={0.9}
         bottom="30%"
         rotateX={32}
+        reducedMotion={reducedMotion}
       />
       <WaveLayer
         d="M0,0 C300,50 550,105 800,60 C1050,20 1300,90 1600,55 L1600,250 L0,250 Z"
@@ -146,6 +150,7 @@ function BeachWaves() {
         delay={1.2}
         bottom="40%"
         rotateX={36}
+        reducedMotion={reducedMotion}
       />
       <WaveLayer
         d="M0,0 C250,60 500,115 750,70 C1000,30 1300,100 1600,65 L1600,250 L0,250 Z"
@@ -155,10 +160,11 @@ function BeachWaves() {
         delay={1.5}
         bottom="50%"
         rotateX={40}
+        reducedMotion={reducedMotion}
       />
 
       {/* Foam particles */}
-      <FoamParticles />
+      <FoamParticles reducedMotion={reducedMotion} />
     </div>
   );
 }
@@ -166,6 +172,7 @@ function BeachWaves() {
 export default function LoadingScreen() {
   const [isVisible, setIsVisible] = useState(true);
   const [progress, setProgress] = useState(0);
+  const reducedMotion = useReducedMotion();
 
   useEffect(() => {
     const start = performance.now();
@@ -190,25 +197,25 @@ export default function LoadingScreen() {
     <AnimatePresence>
       {isVisible && (
         <motion.div
-          initial={{ opacity: 1 }}
+          initial={reducedMotion ? { opacity: 1 } : { opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: reducedMotion ? 0 : 0.4, ease: [0.22, 1, 0.36, 1] }}
           className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-white"
         >
-          <BeachWaves />
+          <BeachWaves reducedMotion={reducedMotion} />
 
           {/* Logo */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.92, y: 6 }}
+            initial={reducedMotion ? { opacity: 1, scale: 1, y: 0 } : { opacity: 0, scale: 0.92, y: 6 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: reducedMotion ? 0 : 0.8, ease: [0.22, 1, 0.36, 1] }}
             className="relative z-10"
           >
             {/* Glow behind logo */}
             <motion.div
               className="absolute -inset-10 rounded-full bg-blue-500/5 blur-2xl"
-              animate={{ scale: [1, 1.15, 1], opacity: [0.3, 0.6, 0.3] }}
-              transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
+              animate={reducedMotion ? { scale: 1, opacity: 0.4 } : { scale: [1, 1.15, 1], opacity: [0.3, 0.6, 0.3] }}
+              transition={{ duration: reducedMotion ? 0 : 2.5, repeat: reducedMotion ? 0 : Infinity, ease: 'easeInOut' }}
             />
             <Image
               src="/assets/images/logo/logo-lucas.png"

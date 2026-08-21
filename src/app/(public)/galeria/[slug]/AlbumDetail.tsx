@@ -83,6 +83,7 @@ export default function AlbumDetail({ albumId, fotos, videos }: Props) {
                 {fotos.map((foto) => (
                   <button
                     key={foto.id}
+                    aria-label={`Ver foto: ${foto.legenda || 'sem legenda'}`}
                     onClick={() => setLightboxSrc(foto.url)}
                     className="flex-none w-64 h-48 rounded-xl overflow-hidden bg-gray-100 group cursor-pointer"
                   >
@@ -101,6 +102,7 @@ export default function AlbumDetail({ albumId, fotos, videos }: Props) {
             {fotos.length > 1 && (
               <>
                 <button
+                  aria-label="Fotos anteriores"
                   onClick={scrollFotosPrev}
                   disabled={!canFotosPrev}
                   className={`absolute -left-3 top-1/2 -translate-y-1/2 z-20 flex items-center justify-center w-9 h-9 rounded-full bg-white shadow-lg border border-gray-200 transition-all duration-200 hover:scale-110 ${
@@ -112,6 +114,7 @@ export default function AlbumDetail({ albumId, fotos, videos }: Props) {
                   </svg>
                 </button>
                 <button
+                  aria-label="Próximas fotos"
                   onClick={scrollFotosNext}
                   disabled={!canFotosNext}
                   className={`absolute -right-3 top-1/2 -translate-y-1/2 z-20 flex items-center justify-center w-9 h-9 rounded-full bg-white shadow-lg border border-gray-200 transition-all duration-200 hover:scale-110 ${
@@ -150,6 +153,7 @@ export default function AlbumDetail({ albumId, fotos, videos }: Props) {
                   return (
                     <button
                       key={video.id}
+                      aria-label={`Assistir vídeo: ${video.titulo}`}
                       onClick={() => setVideoModal(video)}
                       className="flex-none w-80 text-left group cursor-pointer"
                     >
@@ -187,6 +191,7 @@ export default function AlbumDetail({ albumId, fotos, videos }: Props) {
             {videos.length > 1 && (
               <>
                 <button
+                  aria-label="Vídeos anteriores"
                   onClick={scrollVideosPrev}
                   disabled={!canVideosPrev}
                   className={`absolute -left-3 top-1/2 -translate-y-1/2 z-20 flex items-center justify-center w-9 h-9 rounded-full bg-white shadow-lg border border-gray-200 transition-all duration-200 hover:scale-110 ${
@@ -198,6 +203,7 @@ export default function AlbumDetail({ albumId, fotos, videos }: Props) {
                   </svg>
                 </button>
                 <button
+                  aria-label="Próximos vídeos"
                   onClick={scrollVideosNext}
                   disabled={!canVideosNext}
                   className={`absolute -right-3 top-1/2 -translate-y-1/2 z-20 flex items-center justify-center w-9 h-9 rounded-full bg-white shadow-lg border border-gray-200 transition-all duration-200 hover:scale-110 ${
@@ -227,9 +233,15 @@ export default function AlbumDetail({ albumId, fotos, videos }: Props) {
       {lightboxSrc && (
         <div
           className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4 cursor-pointer"
-          onClick={() => setLightboxSrc(null)}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Foto ampliada"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setLightboxSrc(null);
+          }}
         >
           <button
+            aria-label="Fechar"
             className="absolute top-6 right-6 text-white/70 hover:text-white z-10"
             onClick={() => setLightboxSrc(null)}
           >
