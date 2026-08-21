@@ -1,6 +1,6 @@
 import Link from 'next/link';
-import { getAllVideos } from '@/lib/supabase-server';
-import type { Video } from '@/lib/supabase-server';
+import { getAllVideos } from '@/lib/supabase-public';
+import type { Video } from '@/lib/supabase-public';
 import VideosGrid from './VideosGrid';
 
 export default async function VideosPage() {

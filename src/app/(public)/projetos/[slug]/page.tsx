@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
-import { getProjetoBySlug, getAllProjetoSlugs } from '@/lib/supabase-server';
+import { getProjetoBySlug, getAllProjetoSlugs } from '@/lib/supabase-public';
 import ProjetoContent from '@/components/sections/ProjetoContent';
 
 export async function generateStaticParams() {

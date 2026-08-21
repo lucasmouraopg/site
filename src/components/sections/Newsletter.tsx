@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import Modal from '@/components/ui/Modal';
 import FormularioLeads from './FormularioLeads';
 

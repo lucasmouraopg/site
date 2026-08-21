@@ -5,7 +5,7 @@ import GaleriaEventos from '@/components/sections/GaleriaEventos';
 import RedesSociais from '@/components/sections/RedesSociais';
 import Agenda from '@/components/sections/Agenda';
 import Newsletter from '@/components/sections/Newsletter';
-import { getProjetos } from '@/lib/supabase-server';
+import { getProjetos } from '@/lib/supabase-public';
 
 export default async function Home() {
   const projetos = await getProjetos();

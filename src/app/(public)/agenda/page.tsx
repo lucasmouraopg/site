@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { getCompromissos } from '@/lib/supabase-server';
+import { getCompromissos } from '@/lib/supabase-public';
 
 function formatDateTime(dateStr: string) {
   return new Date(dateStr).toLocaleDateString('pt-BR', {

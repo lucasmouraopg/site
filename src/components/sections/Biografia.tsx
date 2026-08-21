@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import Image from 'next/image';
 import useEmblaCarousel from 'embla-carousel-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 
 const bioPhotos = [
   '/assets/images/bio/LUCAS1.PNG',

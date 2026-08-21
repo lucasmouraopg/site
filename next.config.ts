@@ -49,6 +49,11 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   images: {
+    localPatterns: [
+      {
+        pathname: '/assets/**',
+      },
+    ],
     remotePatterns: [
       {
         protocol: 'https',

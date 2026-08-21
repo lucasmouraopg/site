@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useCallback, useState, useMemo } from 'react';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import { socialLinks, instagramReels as allReels } from '@/data/site-config';
 import SocialIcon from '@/components/ui/SocialIcon';
 

@@ -1,6 +1,6 @@
 import Link from 'next/link';
-import { getAlbumById, getFotosByAlbum } from '@/lib/supabase-server';
-import type { GaleriaAlbum, GaleriaFoto } from '@/lib/supabase-server';
+import { getAlbumById, getFotosByAlbum } from '@/lib/supabase-public';
+import type { GaleriaAlbum, GaleriaFoto } from '@/lib/supabase-public';
 import FotosGrid from '@/app/(public)/galeria/fotos/FotosGrid';
 
 interface PageProps {

@@ -1,6 +1,6 @@
 import Link from 'next/link';
-import { getAlbumById, getFotosByAlbum, getVideosByAlbum } from '@/lib/supabase-server';
-import type { GaleriaAlbum, GaleriaFoto, Video } from '@/lib/supabase-server';
+import { getAlbumById, getFotosByAlbum, getVideosByAlbum } from '@/lib/supabase-public';
+import type { GaleriaAlbum, GaleriaFoto, Video } from '@/lib/supabase-public';
 import AlbumDetail from './AlbumDetail';
 
 interface PageProps {

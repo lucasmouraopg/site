@@ -1,6 +1,6 @@
 import Link from 'next/link';
-import { getAllFotos } from '@/lib/supabase-server';
-import type { GaleriaFoto } from '@/lib/supabase-server';
+import { getAllFotos } from '@/lib/supabase-public';
+import type { GaleriaFoto } from '@/lib/supabase-public';
 import FotosGrid from './FotosGrid';
 
 export default async function FotosPage() {

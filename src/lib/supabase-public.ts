@@ -1,34 +1,14 @@
-import { createServerClient } from '@supabase/ssr';
-import { cookies } from 'next/headers';
+import { createClient } from '@supabase/supabase-js';
+import type { GaleriaAlbum, GaleriaFoto, Video, RedeSocial, Configuracao, Projeto } from '@/types';
 
-export type { GaleriaAlbum, GaleriaFoto, Video, RedeSocial, Configuracao, Projeto } from '@/types';
+export type { GaleriaAlbum, GaleriaFoto, Video, RedeSocial, Configuracao, Projeto };
 
-async function createCookieClient() {
-  const cookieStore = await cookies();
-  return createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll() {
-          return cookieStore.getAll();
-        },
-        setAll(cookiesToSet) {
-          try {
-            cookiesToSet.forEach(({ name, value, options }) =>
-              cookieStore.set(name, value, options)
-            );
-          } catch {
-            // Server Component — ignore
-          }
-        },
-      },
-    }
-  );
-}
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+);
 
-export async function getProjetos() {
-  const supabase = await createCookieClient();
+export async function getProjetos(): Promise<Projeto[]> {
   const { data, error } = await supabase
     .from('projetos')
     .select('*')
@@ -37,11 +17,10 @@ export async function getProjetos() {
     .limit(100);
 
   if (error) throw error;
-  return (data ?? []) as import('./supabase').Projeto[];
+  return (data ?? []) as Projeto[];
 }
 
-export async function getProjetoBySlug(slug: string) {
-  const supabase = await createCookieClient();
+export async function getProjetoBySlug(slug: string): Promise<Projeto> {
   try {
     const { data, error } = await supabase
       .from('projetos')
@@ -50,7 +29,7 @@ export async function getProjetoBySlug(slug: string) {
       .single();
 
     if (error) throw error;
-    return data as import('./supabase').Projeto;
+    return data as Projeto;
   } catch {
     const { getProjetoBySlug: getLocal } = await import('@/data/projetos');
     const p = getLocal(slug);
@@ -72,9 +51,8 @@ export async function getProjetoBySlug(slug: string) {
   }
 }
 
-export async function getAllProjetoSlugs() {
+export async function getAllProjetoSlugs(): Promise<string[]> {
   try {
-    const supabase = await createCookieClient();
     const { data, error } = await supabase
       .from('projetos')
       .select('slug')
@@ -89,8 +67,7 @@ export async function getAllProjetoSlugs() {
   return getAllSlugs();
 }
 
-export async function getGaleriaAlbuns() {
-  const supabase = await createCookieClient();
+export async function getGaleriaAlbuns(): Promise<GaleriaAlbum[]> {
   const { data, error } = await supabase
     .from('galeria_albuns')
     .select('*')
@@ -99,33 +76,19 @@ export async function getGaleriaAlbuns() {
     .limit(100);
 
   if (error) throw error;
-  return data as import('./supabase').GaleriaAlbum[];
+  return data as GaleriaAlbum[];
 }
 
-export async function getCompromissos() {
-  const supabase = await createCookieClient();
-  const { data } = await supabase
-    .from('agenda')
-    .select('id, titulo, descricao, data_hora, local, status')
-    .eq('status', 'publicado')
-    .order('data_hora', { ascending: true })
-    .limit(50);
-
-  return data ?? [];
-}
-
-export async function getAlbumById(slug: string) {
-  const supabase = await createCookieClient();
+export async function getAlbumById(id: string): Promise<GaleriaAlbum | null> {
   const { data } = await supabase
     .from('galeria_albuns')
     .select('*')
-    .eq('id', slug)
+    .eq('id', id)
     .single();
-  return data as import('./supabase').GaleriaAlbum | null;
+  return data as GaleriaAlbum | null;
 }
 
 export async function getFotosByAlbum(albumId: string) {
-  const supabase = await createCookieClient();
   const { data } = await supabase
     .from('galeria_fotos')
     .select('*')
@@ -136,7 +99,6 @@ export async function getFotosByAlbum(albumId: string) {
 }
 
 export async function getVideosByAlbum(albumId: string) {
-  const supabase = await createCookieClient();
   const { data } = await supabase
     .from('videos')
     .select('*')
@@ -148,7 +110,6 @@ export async function getVideosByAlbum(albumId: string) {
 }
 
 export async function getAllFotos() {
-  const supabase = await createCookieClient();
   const { data } = await supabase
     .from('galeria_fotos')
     .select('*')
@@ -158,12 +119,21 @@ export async function getAllFotos() {
 }
 
 export async function getAllVideos() {
-  const supabase = await createCookieClient();
   const { data } = await supabase
     .from('videos')
     .select('*')
     .eq('status', 'publicado')
     .order('ordem', { ascending: true })
     .limit(100);
+  return data ?? [];
+}
+
+export async function getCompromissos() {
+  const { data } = await supabase
+    .from('agenda')
+    .select('id, titulo, descricao, data_hora, local, status')
+    .eq('status', 'publicado')
+    .order('data_hora', { ascending: true })
+    .limit(50);
   return data ?? [];
 }

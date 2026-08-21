@@ -1,6 +1,6 @@
 import Link from 'next/link';
-import { getAlbumById, getVideosByAlbum } from '@/lib/supabase-server';
-import type { GaleriaAlbum, Video } from '@/lib/supabase-server';
+import { getAlbumById, getVideosByAlbum } from '@/lib/supabase-public';
+import type { GaleriaAlbum, Video } from '@/lib/supabase-public';
 import VideosGrid from '@/app/(public)/galeria/videos/VideosGrid';
 
 interface PageProps {

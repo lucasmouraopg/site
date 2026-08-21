@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { getGaleriaAlbuns, type GaleriaAlbum } from '@/lib/supabase-server';
+import { getGaleriaAlbuns, type GaleriaAlbum } from '@/lib/supabase-public';
 
 export default async function GaleriaPage() {
   let albuns: GaleriaAlbum[] = [];
