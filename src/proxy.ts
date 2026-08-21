@@ -28,11 +28,12 @@ export async function proxy(request: NextRequest) {
 
   const { data: { user } } = await supabase.auth.getUser()
 
-  if (request.nextUrl.pathname.startsWith('/admin') && 
-      !request.nextUrl.pathname.startsWith('/admin/login') &&
-      !user) {
+  const isAdminRoute = request.nextUrl.pathname.startsWith('/admin') &&
+    !request.nextUrl.pathname.startsWith('/admin/login')
+
+  if (isAdminRoute && (!user || user.id !== process.env.ADMIN_USER_ID)) {
     const url = request.nextUrl.clone()
-    url.pathname = '/admin/login'
+    url.pathname = user ? '/' : '/admin/login'
     return NextResponse.redirect(url)
   }
 

@@ -27,8 +27,8 @@ export default async function AdminRootLayout({
 
   const { data: { user } } = await supabase.auth.getUser();
 
-  if (!user) {
-    redirect('/admin/login');
+  if (!user || user.id !== process.env.ADMIN_USER_ID) {
+    redirect(user ? '/' : '/admin/login');
   }
 
   return (
