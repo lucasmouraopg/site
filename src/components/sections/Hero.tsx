@@ -27,7 +27,7 @@ export default function Hero() {
         {/* MOBILE: full image, no overlay */}
         <div className="md:hidden w-full relative">
           <Image
-            src="/assets/images/hero/hero-mobile.png"
+            src="/assets/images/hero/hero-mobile.png?v=20260821"
             alt="Lucas Mourão"
             width={952}
             height={1652}
@@ -42,7 +42,7 @@ export default function Hero() {
           className="hidden md:block absolute inset-0 w-full h-full"
         >
           <Image
-            src="/assets/images/hero/hero-desktop.jpg"
+            src="/assets/images/hero/hero-desktop.jpg?v=20260821"
             alt="Lucas Mourão"
             fill
             priority
