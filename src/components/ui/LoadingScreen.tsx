@@ -12,7 +12,7 @@ function WaveLayer({
   opacity,
   duration,
   delay,
-  top,
+  bottom,
   rotateX,
 }: {
   d: string;
@@ -20,14 +20,14 @@ function WaveLayer({
   opacity: number;
   duration: number;
   delay: number;
-  top: string;
+  bottom: string;
   rotateX: number;
 }) {
   return (
     <motion.div
       className="absolute"
       style={{
-        top,
+        bottom,
         left: '-25%',
         width: '150%',
         transform: `perspective(500px) rotateX(${rotateX}deg)`,
@@ -101,14 +101,14 @@ function BeachWaves() {
       {/* Radial glow — very visible */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(59,130,246,0.10)_0%,_transparent_60%)]" />
 
-      {/* Wave layers — intense, spread across full screen */}
+      {/* Wave layers — anchored from bottom */}
       <WaveLayer
         d="M0,0 C200,55 400,5 600,45 C800,85 1000,15 1200,50 C1400,85 1550,25 1600,40 L1600,250 L0,250 Z"
         fill="rgba(59,130,246,0.12)"
         opacity={0.8}
         duration={12}
         delay={0}
-        top="0%"
+        bottom="0%"
         rotateX={18}
       />
       <WaveLayer
@@ -117,7 +117,7 @@ function BeachWaves() {
         opacity={0.85}
         duration={10}
         delay={0.3}
-        top="8%"
+        bottom="10%"
         rotateX={22}
       />
       <WaveLayer
@@ -126,7 +126,7 @@ function BeachWaves() {
         opacity={0.85}
         duration={8}
         delay={0.6}
-        top="16%"
+        bottom="20%"
         rotateX={28}
       />
       <WaveLayer
@@ -135,7 +135,7 @@ function BeachWaves() {
         opacity={0.9}
         duration={7}
         delay={0.9}
-        top="25%"
+        bottom="30%"
         rotateX={32}
       />
       <WaveLayer
@@ -144,7 +144,7 @@ function BeachWaves() {
         opacity={0.9}
         duration={6}
         delay={1.2}
-        top="35%"
+        bottom="40%"
         rotateX={36}
       />
       <WaveLayer
@@ -153,7 +153,7 @@ function BeachWaves() {
         opacity={0.95}
         duration={5}
         delay={1.5}
-        top="45%"
+        bottom="50%"
         rotateX={40}
       />
 

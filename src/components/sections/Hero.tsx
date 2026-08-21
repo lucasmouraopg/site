@@ -25,12 +25,12 @@ export default function Hero() {
         className="relative bg-gray-900 overflow-hidden md:h-[90vh]"
       >
         {/* MOBILE: full image, no overlay */}
-        <div className="md:hidden w-full">
+        <div className="md:hidden w-full relative">
           <Image
             src="/assets/images/hero/hero-mobile.png"
             alt="Lucas Mourão"
-            width={1080}
-            height={1920}
+            width={952}
+            height={1652}
             priority
             className="w-full h-auto block"
           />
